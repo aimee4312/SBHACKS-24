@@ -5,7 +5,6 @@ import hands
 import os
 
 pygame.init()
-print("Current Working Directory:", os.getcwd())
 
 # ------------- SPRITES -------------
 shoot_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png"),
@@ -26,6 +25,8 @@ tutorial_reload = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-2
               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r2.png"),
               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png")]
 icon = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/icon.png")
+idle = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle1.PNG"),
+        pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle2.png")]
 
 """ shoot_sprite = [pygame.image.load("sprites/computer/shoot1.png"),
                 pygame.image.load("sprites/computer/shoot2.png"),
@@ -141,6 +142,11 @@ reload_anim_percentage_y = 0.1
 reload_anim_x = int(display_width * reload_anim_percentage_x)
 reload_anim_y = int(display_height * reload_anim_percentage_y)
 
+idle_anim_percentage_x = 0.7
+idle_anim_percentage_y = 0.1 
+idle_anim_x = int(display_width * idle_anim_percentage_x)
+idle_anim_y = int(display_height * idle_anim_percentage_y)
+
 # MENU
 menu_font = pygame.font.Font('freesansbold.ttf', 84)
 menu_text = menu_font.render("Welcome to ShootOut", True, (222, 169, 169))
@@ -198,6 +204,59 @@ def update_tutorial(shoot_anim, shield_anim, reload_anim):
     main_scene.blit(reload_anim.current_frame, (reload_anim_x, reload_anim_y))
     pygame.display.update()
 
+def end_game_display():
+    main_scene.blit(wins_text_outline, (wins_x - 2, wins_y - 2))
+    main_scene.blit(wins_text_outline, (wins_x - 2, wins_y))
+    main_scene.blit(wins_text_outline, (wins_x, wins_y - 2))
+    main_scene.blit(wins_text_outline, (wins_x, wins_y + 2))
+    main_scene.blit(wins_text_outline, (wins_x + 2, wins_y))
+    main_scene.blit(wins_text_outline, (wins_x + 2, wins_y + 2))
+    main_scene.blit(wins_text, (wins_x, wins_y))
+
+    main_scene.blit(losses_text_outline, (losses_x - 2, losses_y - 2))
+    main_scene.blit(losses_text_outline, (losses_x - 2, losses_y))
+    main_scene.blit(losses_text_outline, (losses_x, losses_y - 2))
+    main_scene.blit(losses_text_outline, (losses_x, losses_y + 2))
+    main_scene.blit(losses_text_outline, (losses_x + 2, losses_y))
+    main_scene.blit(losses_text_outline, (losses_x + 2, losses_y + 2))
+    main_scene.blit(losses_text, (losses_x, losses_y))
+    pygame.display.update()
+
+def menu_display():
+    main_scene.blit(menu_text_outline, (menu_text_x - 2, menu_text_y - 2))
+    main_scene.blit(menu_text_outline, (menu_text_x - 2, menu_text_y))
+    main_scene.blit(menu_text_outline, (menu_text_x, menu_text_y - 2))
+    main_scene.blit(menu_text_outline, (menu_text_x, menu_text_y + 2))
+    main_scene.blit(menu_text_outline, (menu_text_x + 2, menu_text_y))
+    main_scene.blit(menu_text_outline, (menu_text_x + 2, menu_text_y + 2))
+    main_scene.blit(menu_text, (menu_text_x, menu_text_y))
+
+    main_scene.blit(help_text_outline, (help_text_x - 2, help_text_y - 2))
+    main_scene.blit(help_text_outline, (help_text_x - 2, help_text_y))
+    main_scene.blit(help_text_outline, (help_text_x, help_text_y - 2))
+    main_scene.blit(help_text_outline, (help_text_x, help_text_y + 2))
+    main_scene.blit(help_text_outline, (help_text_x + 2, help_text_y))
+    main_scene.blit(help_text_outline, (help_text_x + 2, help_text_y + 2))
+    main_scene.blit(help_text, (help_text_x, help_text_y))
+
+    main_scene.blit(start_text_outline, (start_text_x - 2, start_text_y - 2))
+    main_scene.blit(start_text_outline, (start_text_x - 2, start_text_y))
+    main_scene.blit(start_text_outline, (start_text_x, start_text_y - 2))
+    main_scene.blit(start_text_outline, (start_text_x, start_text_y + 2))
+    main_scene.blit(start_text_outline, (start_text_x + 2, start_text_y))
+    main_scene.blit(start_text_outline, (start_text_x + 2, start_text_y + 2))
+    main_scene.blit(start_text, (start_text_x, start_text_y))
+    pygame.display.update()
+
+def update_idle(idle_anim):
+    idle_anim.update(clock.tick(60) / 1000.0)
+    main_scene.blit(idle_anim.current_frame, (idle_anim_x, idle_anim_y))
+    pygame.display.update()
+
+def start_game_display():
+    idle_anim = tutorial.tutorial_animations(idle)
+    return idle_anim
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -211,31 +270,22 @@ while running:
                 running = False
 
     if menu_state:
-        main_scene.blit(menu_text_outline, (menu_text_x - 2, menu_text_y - 2))
-        main_scene.blit(menu_text_outline, (menu_text_x - 2, menu_text_y))
-        main_scene.blit(menu_text_outline, (menu_text_x, menu_text_y - 2))
-        main_scene.blit(menu_text_outline, (menu_text_x, menu_text_y + 2))
-        main_scene.blit(menu_text_outline, (menu_text_x + 2, menu_text_y))
-        main_scene.blit(menu_text_outline, (menu_text_x + 2, menu_text_y + 2))
-        main_scene.blit(menu_text, (menu_text_x, menu_text_y))
+        menu_display()
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_h:
+                    tutorial_state = True
+                    menu_state = False
+                    main_scene.fill((0, 0, 0))
+                    pygame.display.update()
+                    shoot_anim, shield_anim, reload_anim = start_tutorial()
+                if event.key == pygame.K_t:
+                    game_state = True
+                    menu_state = False
+                    main_scene.blit(background, (0, 0))
+            if event.type == pygame.QUIT:
+                running = False
 
-        main_scene.blit(help_text_outline, (help_text_x - 2, help_text_y - 2))
-        main_scene.blit(help_text_outline, (help_text_x - 2, help_text_y))
-        main_scene.blit(help_text_outline, (help_text_x, help_text_y - 2))
-        main_scene.blit(help_text_outline, (help_text_x, help_text_y + 2))
-        main_scene.blit(help_text_outline, (help_text_x + 2, help_text_y))
-        main_scene.blit(help_text_outline, (help_text_x + 2, help_text_y + 2))
-        main_scene.blit(help_text, (help_text_x, help_text_y))
-
-        main_scene.blit(start_text_outline, (start_text_x - 2, start_text_y - 2))
-        main_scene.blit(start_text_outline, (start_text_x - 2, start_text_y))
-        main_scene.blit(start_text_outline, (start_text_x, start_text_y - 2))
-        main_scene.blit(start_text_outline, (start_text_x, start_text_y + 2))
-        main_scene.blit(start_text_outline, (start_text_x + 2, start_text_y))
-        main_scene.blit(start_text_outline, (start_text_x + 2, start_text_y + 2))
-        main_scene.blit(start_text, (start_text_x, start_text_y))
-        pygame.display.update()
-          
     if tutorial_state:
         tutorial_text = font.render("Tutorial", True, text_color)
         tutorial_rect = tutorial_text.get_rect(center=(tutorial_text_x, tutorial_text_y))
@@ -283,28 +333,24 @@ while running:
         main_scene.fill((0, 0, 0))
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_t:
+                if event.key == pygame.K_b:
                     tutorial_state = False
                     menu_state = True
                     main_scene.blit(background, (0, 0))
                     main_scene.blit(temp_start_text, temp_start_rect)
+                if event.key == pygame.K_t:
+                    game_state = True
+                    tutorial_state = False
+                    main_scene.blit(background, (0, 0))
             if event.type == pygame.QUIT:
                 running = False
 
-    if game_state:
-        main_scene.blit(wins_text_outline, (wins_x - 2, wins_y - 2))
-        main_scene.blit(wins_text_outline, (wins_x - 2, wins_y))
-        main_scene.blit(wins_text_outline, (wins_x, wins_y - 2))
-        main_scene.blit(wins_text_outline, (wins_x, wins_y + 2))
-        main_scene.blit(wins_text_outline, (wins_x + 2, wins_y))
-        main_scene.blit(wins_text_outline, (wins_x + 2, wins_y + 2))
-        main_scene.blit(wins_text, (wins_x, wins_y))
-
-        main_scene.blit(losses_text_outline, (losses_x - 2, losses_y - 2))
-        main_scene.blit(losses_text_outline, (losses_x - 2, losses_y))
-        main_scene.blit(losses_text_outline, (losses_x, losses_y - 2))
-        main_scene.blit(losses_text_outline, (losses_x, losses_y + 2))
-        main_scene.blit(losses_text_outline, (losses_x + 2, losses_y))
-        main_scene.blit(losses_text_outline, (losses_x + 2, losses_y + 2))
-        main_scene.blit(losses_text, (losses_x, losses_y))
-        pygame.display.update()
+    """ if game_state:
+        main_scene.blit(background, (0, 0))
+        countdown = 5
+        while game_over_state != True:
+            clock.tick(countdown)
+            idle_anim = start_game_display()
+            update_idle(idle_anim)
+            if event.type == pygame.QUIT:
+                running = False """
