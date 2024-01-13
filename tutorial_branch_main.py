@@ -60,6 +60,21 @@ while running:
                 running = False
             
     if tut_run:
+        shoot_text = font.render("Tutorial", True, text_color)
+        shoot_rect = start_text.get_rect(center=(width - 530 , height - 750))
+        main_scene.blit(shoot_text, shoot_rect)
+
+        shoot_text = font.render("Shoot", True, text_color)
+        shoot_rect = start_text.get_rect(center=(width - 305, height - 650))
+        main_scene.blit(shoot_text, shoot_rect)
+
+        shield_text = font.render("Shield", True, text_color)
+        shield_rect = shield_text.get_rect(center=(width - 525, height - 400))
+        main_scene.blit(shield_text, shield_rect)
+
+        reload_text = font.render("Reload", True, text_color)
+        reload_rect = reload_text.get_rect(center=(width - 750, height - 650))
+        main_scene.blit(reload_text, reload_rect)
         shoot_anim.update(clock.tick(60) / 1000.0)
         shield_anim.update(clock.tick(60) / 1000.0)
         reload_anim.update(clock.tick(60) / 1000.0)
