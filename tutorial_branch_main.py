@@ -26,7 +26,7 @@ tutorial_reload = [pygame.image.load("sprites/tutorial/tutorial_r1.png"),
 
 # ------------- SCENE -------------
 SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 800
+SCREEN_HEIGHT = 700
 main_scene = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 main_scene.fill((0, 0, 0))
 clock = pygame.time.Clock()
