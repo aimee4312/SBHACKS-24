@@ -88,6 +88,25 @@ reload_anim_y = int(display_height * reload_anim_percentage_y)
 
 choices = {"shield": 2, "shoot": 0}
 
+def start_tutorial():
+    shoot_anim = tutorial.tutorial_animations(tutorial_shoot)
+    shield_anim = tutorial.tutorial_animations(tutorial_shield)
+    reload_anim = tutorial.tutorial_animations(tutorial_reload)
+    shoot_anim.start()
+    shield_anim.start()
+    reload_anim.start()
+    return shoot_anim, shield_anim, reload_anim
+
+def update_tutorial(shoot_anim, shield_anim, reload_anim):
+    shoot_anim.update(clock.tick(60) / 1000.0)
+    shield_anim.update(clock.tick(60) / 1000.0)
+    reload_anim.update(clock.tick(60) / 1000.0)
+
+    main_scene.blit(shoot_anim.current_frame, (shoot_anim_x, shoot_anim_y))
+    main_scene.blit(shield_anim.current_frame, (shield_anim_x, shield_anim_y))
+    main_scene.blit(reload_anim.current_frame, (reload_anim_x, reload_anim_y))
+    pygame.display.update()
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -95,12 +114,7 @@ while running:
                 tutorial_state = True
                 main_scene.fill((0, 0, 0))
                 pygame.display.update()
-                shoot_anim = tutorial.tutorial_animations(tutorial_shoot)
-                shield_anim = tutorial.tutorial_animations(tutorial_shield)
-                reload_anim = tutorial.tutorial_animations(tutorial_reload)
-                shoot_anim.start()
-                shield_anim.start()
-                reload_anim.start()
+                shoot_anim, shield_anim, reload_anim = start_tutorial()
         if event.type == pygame.QUIT:
                 running = False
             
@@ -120,14 +134,8 @@ while running:
         reload_text = font.render("Reload", True, text_color)
         reload_rect = reload_text.get_rect(center=(reload_text_x, reload_text_y))
         main_scene.blit(reload_text, reload_rect)
-        shoot_anim.update(clock.tick(60) / 1000.0)
-        shield_anim.update(clock.tick(60) / 1000.0)
-        reload_anim.update(clock.tick(60) / 1000.0)
-
-        main_scene.blit(shoot_anim.current_frame, (shoot_anim_x, shoot_anim_y))
-        main_scene.blit(shield_anim.current_frame, (shield_anim_x, shield_anim_y))
-        main_scene.blit(reload_anim.current_frame, (reload_anim_x, reload_anim_y))
-        pygame.display.update()
+        
+        update_tutorial(shoot_anim, shield_anim, reload_anim)
         main_scene.fill((0, 0, 0))
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -135,8 +143,3 @@ while running:
                     tut_run = False
             if event.type == pygame.QUIT:
                 running = False
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    

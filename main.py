@@ -4,12 +4,9 @@ import pygame
 pygame.init()
 
 # screen settings
-screen_info = pygame.display.Info()
-display_width = screen_info.current_w
-display_height = screen_info.current_h
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 800
-screen = pygame.display.set_mode((display_width, display_height))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("ShootOut", "ShootOut")
 
 # background
