@@ -262,7 +262,10 @@ while running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_t:
-                    tut_run = False
+                    tutorial_state = False
+                    menu_state = True
+                    main_scene.blit(background, (0, 0))
+                    main_scene.blit(temp_start_text, temp_start_rect)
             if event.type == pygame.QUIT:
                 running = False
 
