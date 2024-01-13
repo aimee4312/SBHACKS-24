@@ -1,7 +1,6 @@
 import random
-choices = {"shield": 2, "shoot": 0} #make global in main
 
-def computer_choice():
+def computer_choice(choices):
     possible_choices = ["reload"]
     if choices["shield"]:
         possible_choices.append("shield")

@@ -1,6 +1,6 @@
 import pygame
 import tutorial
-import ai
+import computer
 import hands
 
 pygame.init()
@@ -42,6 +42,8 @@ start_text = font.render("Start", True, text_color)
 start_rect = start_text.get_rect(center=(width // 2, height - 50))
 main_scene.blit(start_text, start_rect)
 pygame.display.update()
+
+choices = {"shield": 2, "shoot": 0}
 
 while running:
     for event in pygame.event.get():
