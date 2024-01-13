@@ -2,6 +2,8 @@ import pygame
 import sys
 import tutorial
 
+pygame.init()
+
 # background
 background = pygame.image.load("assets/background/background.jpeg")
 
@@ -24,13 +26,12 @@ tutorial_reload = [pygame.image.load("assets/sprites/tutorial/tutorial_r1.png"),
               pygame.image.load("assets/sprites/tutorial/tutorial_r2.png"),
               pygame.image.load("assets/sprites/tutorial/tutorial_r1.png")]
 
-pygame.init()
-
 # ------------- SCENE -------------
 width = 1000
 height = 800
 clock = pygame.time.Clock()
-
+wins = 0
+losses = 0
 # ------------- BOOLS -------------
 
 # ------------- TEXT BUTTONS -------------
@@ -72,8 +73,11 @@ losses_y = 20
 class Game:
     def __init__(self):
         self.window = pygame.display.set_mode((width, height))
+        pygame.display.set_caption("ShootOut", "ShootOut")
+        self.background = pygame.image.load("assets/background/background.jpeg")
         self.gameStateManager = GameStateManager('menu')
         self.window.fill((0, 0, 0))
+        self.window.blit(background, (0, 0))
 
         self.window.blit(start_text, start_rect)
         self.menu = Menu(self.window, self.gameStateManager)
@@ -105,14 +109,39 @@ class Menu:
     def __init__(self, display, gameStateManager):
         self.display = display
         self.gameStateManager = gameStateManager
+        self.display.blit(background, (0, 0))
+        self.display.blit(menu_text_outline, (menu_x-2, menu_y-2))
+        self.display.blit(menu_text_outline, (menu_x-2, menu_y))
+        self.display.blit(menu_text_outline, (menu_x, menu_y-2))
+        self.display.blit(menu_text_outline, (menu_x, menu_y+2))
+        self.display.blit(menu_text_outline, (menu_x+2, menu_y))
+        self.display.blit(menu_text_outline, (menu_x+2, menu_y+2))
+        self.display.blit(menu_text, (menu_x, menu_y))
+
+        self.display.blit(help_text_outline, (help_x-2, help_y-2))
+        self.display.blit(help_text_outline, (help_x-2, help_y))
+        self.display.blit(help_text_outline, (help_x, help_y-2))
+        self.display.blit(help_text_outline, (help_x, help_y+2))
+        self.display.blit(help_text_outline, (help_x+2, help_y))
+        self.display.blit(help_text_outline, (help_x+2, help_y+2))
+        self.display.blit(help_text, (help_x, help_y))
+
+        self.display.blit(start_text_outline, (start_x-2, start_y-2))
+        self.display.blit(start_text_outline, (start_x-2, start_y))
+        self.display.blit(start_text_outline, (start_x, start_y-2))
+        self.display.blit(start_text_outline, (start_x, start_y+2))
+        self.display.blit(start_text_outline, (start_x+2, start_y))
+        self.display.blit(start_text_outline, (start_x+2, start_y+2))
+        self.display.blit(start_text, (start_x, start_y))
+        pygame.display.update()
     def run(self):
-        self.display.fill('blue')
         pygame.display.update()
 
 class Tutorial:
     def __init__(self, display, gameStateManager):
         self.display = display
         self.gameStateManager = gameStateManager
+        self.display.blit(background, (0, 0))
         self.shoot_anim = tutorial.tutorial_animations(tutorial_shoot)
         self.shield_anim = tutorial.tutorial_animations(tutorial_shield)
         self.reload_anim = tutorial.tutorial_animations(tutorial_reload)
@@ -121,6 +150,7 @@ class Tutorial:
         self.reload_anim.start()
         
     def run(self):
+        self.display.blit(background, (0, 0))
         shoot_text = font.render("Tutorial", True, text_color)
         shoot_rect = start_text.get_rect(center=(width - 530 , height - 750))
         self.display.blit(shoot_text, shoot_rect)
@@ -149,6 +179,7 @@ class Tutorial:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_m: #m for menu
                     self.gameStateManager.set_state('menu')
+                    self.menu = Menu(self.display, self.gameStateManager)
             if event.type == pygame.QUIT:
                 running = False
 
