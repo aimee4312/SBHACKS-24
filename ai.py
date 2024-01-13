@@ -1,7 +1,7 @@
 import random
-choices = {"shield": 2, "shoot": 0}
+choices = {"shield": 2, "shoot": 0} #make global in main
 
-def game_logic():
+def computer_choice():
     possible_choices = ["reload"]
     if choices["shield"]:
         possible_choices.append("shield")
@@ -17,7 +17,3 @@ def game_logic():
             choices["shoot"] += 1
     
     return selected_choice
-
-
-if __name__ == "__main__":
-    pass
