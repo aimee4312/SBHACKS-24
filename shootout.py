@@ -25,6 +25,7 @@ tutorial_shield = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-2
 tutorial_reload = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png"),
               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r2.png"),
               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png")]
+icon = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/icon.png")
 
 """ shoot_sprite = [pygame.image.load("sprites/computer/shoot1.png"),
                 pygame.image.load("sprites/computer/shoot2.png"),
@@ -56,6 +57,7 @@ background = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/asse
 #background = pygame.image.load("assets/background/background.jpeg")
 pygame.display.set_caption("ShootOut", "ShootOut")
 background = pygame.transform.scale(background, (main_scene_WIDTH, main_scene_HEIGHT))
+pygame.display.set_icon(icon)
 main_scene.blit(background, (0, 0))
 clock = pygame.time.Clock()
 
