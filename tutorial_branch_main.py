@@ -25,9 +25,9 @@ tutorial_reload = [pygame.image.load("sprites/tutorial/tutorial_r1.png"),
               pygame.image.load("sprites/tutorial/tutorial_r1.png")]
 
 # ------------- SCENE -------------
-width = 1000
-height = 800
-main_scene = pygame.display.set_mode((width, height))
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 800
+main_scene = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 main_scene.fill((0, 0, 0))
 clock = pygame.time.Clock()
 
@@ -39,7 +39,7 @@ font = pygame.font.Font(None, 36)
 text_color = (255, 255, 255)
 
 start_text = font.render("Start", True, text_color)
-start_rect = start_text.get_rect(center=(width // 2, height - 50))
+start_rect = start_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 50))
 main_scene.blit(start_text, start_rect)
 pygame.display.update()
 
@@ -63,19 +63,19 @@ while running:
             
     if tut_run:
         shoot_text = font.render("Tutorial", True, text_color)
-        shoot_rect = start_text.get_rect(center=(width - 530 , height - 750))
+        shoot_rect = start_text.get_rect(center=(SCREEN_WIDTH - 530 , SCREEN_HEIGHT - 750))
         main_scene.blit(shoot_text, shoot_rect)
 
         shoot_text = font.render("Shoot", True, text_color)
-        shoot_rect = start_text.get_rect(center=(width - 305, height - 650))
+        shoot_rect = start_text.get_rect(center=(SCREEN_WIDTH - 305, SCREEN_HEIGHT - 650))
         main_scene.blit(shoot_text, shoot_rect)
 
         shield_text = font.render("Shield", True, text_color)
-        shield_rect = shield_text.get_rect(center=(width - 525, height - 400))
+        shield_rect = shield_text.get_rect(center=(SCREEN_WIDTH - 525, SCREEN_HEIGHT - 400))
         main_scene.blit(shield_text, shield_rect)
 
         reload_text = font.render("Reload", True, text_color)
-        reload_rect = reload_text.get_rect(center=(width - 750, height - 650))
+        reload_rect = reload_text.get_rect(center=(SCREEN_WIDTH - 750, SCREEN_HEIGHT - 650))
         main_scene.blit(reload_text, reload_rect)
         shoot_anim.update(clock.tick(60) / 1000.0)
         shield_anim.update(clock.tick(60) / 1000.0)
