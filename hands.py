@@ -17,54 +17,72 @@ x = 200
 y = 150
 running = True
 while running:
-    value = 0
+    index = 0
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_f:
-                while value < 4:
+            if event.key == pygame.K_f:  
+                while index < 4:
                     clock.tick(4)
+                    if index >= len(shoot_sprite):
+                        index = 0
 
-                    if value >= len(shoot_sprite):
-                        value = 0
-
-                    image = shoot_sprite[value]
-
+                    image = shoot_sprite[index]
                     window.blit(image, (x, y))
-
                     pygame.display.update()
-
                     window.fill((0, 0, 0))
-
-                    value += 1
+                    index += 1
             if event.key == pygame.K_s:
                     clock.tick(1)
+                    if index >= len(shield_sprite):
+                        index = 0
 
-                    if value >= len(shield_sprite):
-                        value = 0
-
-                    image = shield_sprite[value]
-
+                    image = shield_sprite[index]
                     window.blit(image, (x, y))
-
                     pygame.display.update()
-
-                    window.fill((0, 0, 0))
-
             if event.key == pygame.K_r:
-                while value < 3:
+                while index < 3:
                     clock.tick(3)
+                    if index >= len(reload_sprite):
+                        index = 0
 
-                    if value >= len(reload_sprite):
-                        value = 0
-
-                    image = reload_sprite[value]
-
+                    image = reload_sprite[index]
                     window.blit(image, (x, y))
-
                     pygame.display.update()
-
                     window.fill((0, 0, 0))
-
-                    value += 1
+                    index += 1
         elif event.type == pygame.QUIT:
             running = False
+
+# function version
+""" def hands(selected_choice):
+    index = 0
+    if selected_choice == "shoot":
+        while index < 4:
+            clock.tick(4)
+            if index >= len(shoot_sprite):
+                index = 0
+
+            image = shoot_sprite[index]
+            window.blit(image, (x, y))
+            pygame.display.update()
+            window.fill((0, 0, 0))
+            index += 1
+    elif selected_choice == "shield":
+            clock.tick(1)
+            if index >= len(shield_sprite):
+                index = 0
+
+            image = shield_sprite[index]
+            window.blit(image, (x, y))
+            pygame.display.update()
+    elif selected_choice == "reload":
+        while index < 3:
+            clock.tick(3)
+            if index >= len(reload_sprite):
+                index = 0
+
+            image = reload_sprite[index]
+            window.blit(image, (x, y))
+            pygame.display.update()
+            window.fill((0, 0, 0))
+            index += 1 """
