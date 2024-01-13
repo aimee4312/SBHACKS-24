@@ -2,11 +2,31 @@ import pygame
 import tutorial
 import computer
 import hands
+import os
 
 pygame.init()
+print("Current Working Directory:", os.getcwd())
 
 # ------------- SPRITES -------------
-shoot_sprite = [pygame.image.load("sprites/computer/shoot1.png"),
+shoot_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png"),
+                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot2.png"),
+                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot3.png"),
+                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png")]
+reload_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png"),
+                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload2.png"),
+                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png")]
+shield_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shield.png")]
+
+tutorial_shoot = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png"),
+              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s2.png"),
+              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s3.png"),
+              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png")]
+tutorial_shield = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_sh.png")]
+tutorial_reload = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png"),
+              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r2.png"),
+              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png")]
+
+""" shoot_sprite = [pygame.image.load("sprites/computer/shoot1.png"),
                 pygame.image.load("sprites/computer/shoot2.png"),
                 pygame.image.load("sprites/computer/shoot3.png"),
                 pygame.image.load("sprites/computer/shoot1.png")]
@@ -22,7 +42,7 @@ tutorial_shoot = [pygame.image.load("sprites/tutorial/tutorial_s1.png"),
 tutorial_shield = [pygame.image.load("sprites/tutorial/tutorial_sh.png")]
 tutorial_reload = [pygame.image.load("sprites/tutorial/tutorial_r1.png"),
               pygame.image.load("sprites/tutorial/tutorial_r2.png"),
-              pygame.image.load("sprites/tutorial/tutorial_r1.png")]
+              pygame.image.load("sprites/tutorial/tutorial_r1.png")] """
 
 # ------------- SCENE MANAGEMENT-------------
 main_scene_info = pygame.display.Info()
@@ -32,9 +52,9 @@ display_height = main_scene_info.current_h
 main_scene_WIDTH = display_width
 main_scene_HEIGHT = display_height
 main_scene = pygame.display.set_mode((main_scene_WIDTH, main_scene_HEIGHT))
-background = pygame.image.load("assets/background/background.jpeg")
+background = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/background/background.jpeg")
+#background = pygame.image.load("assets/background/background.jpeg")
 pygame.display.set_caption("ShootOut", "ShootOut")
-background = pygame.image.load("assets/background/background.jpeg")
 background = pygame.transform.scale(background, (main_scene_WIDTH, main_scene_HEIGHT))
 main_scene.blit(background, (0, 0))
 clock = pygame.time.Clock()
