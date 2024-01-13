@@ -2,6 +2,9 @@ import pygame
 import sys
 import tutorial
 
+# background
+background = pygame.image.load("assets/background/background.jpeg")
+
 # ------------- SPRITES -------------
 shoot_sprite = [pygame.image.load("assets/sprites/shoot1.png"),
                 pygame.image.load("assets/sprites/shoot2.png"),
@@ -21,23 +24,53 @@ tutorial_reload = [pygame.image.load("assets/sprites/tutorial/tutorial_r1.png"),
               pygame.image.load("assets/sprites/tutorial/tutorial_r2.png"),
               pygame.image.load("assets/sprites/tutorial/tutorial_r1.png")]
 
+pygame.init()
+
 # ------------- SCENE -------------
 width = 1000
 height = 800
 clock = pygame.time.Clock()
 
 # ------------- BOOLS -------------
-pygame.font.init()
+
 # ------------- TEXT BUTTONS -------------
 font = pygame.font.Font(None, 36)
 text_color = (255, 255, 255)
 
 start_text = font.render("Start", True, text_color)
-start_rect = start_text.get_rect(center=(width // 2, height - 50))  
+start_rect = start_text.get_rect(center=(width // 2, height - 50)) 
+
+# menu text
+menu_font = pygame.font.Font('freesansbold.ttf', 84)
+menu_text = menu_font.render("Welcome to ShootOut", True, (222, 169, 169))
+menu_text_outline = menu_font.render("Welcome to ShootOut", True, (0, 0, 0))
+menu_x = 60
+menu_y = 200
+help_font = pygame.font.Font('freesansbold.ttf', 36)
+help_text = help_font.render("Raise your open hand for the tutorial", True, (255, 255, 255))
+help_text_outline = help_font.render("Raise your open hand for the tutorial", True, (0, 0, 0))
+help_x = 150
+help_y = 600
+start_font = pygame.font.Font('freesansbold.ttf', 36)
+start_text = start_font.render("Give a thumbs up to start the game", True, (222, 169, 169))
+start_text_outline = start_font.render("Give a thumbs up to start the game", True, (0, 0, 0))
+start_x = 160
+start_y = 650
+
+# score text
+score_font = pygame.font.Font('freesansbold.ttf', 36)
+wins_text = score_font.render("Wins: " + str(wins), True, (255, 255, 255))
+wins_text_outline = score_font.render("Wins: " + str(wins), True, (0, 0, 0))
+wins_x = 20
+wins_y = 20
+losses_text = score_font.render("Losses: " + str(wins), True, (255, 255, 255))
+losses_text_outline = score_font.render("Losses: " + str(wins), True, (0, 0, 0))
+losses_x = 850
+losses_y = 20
+
 
 class Game:
     def __init__(self):
-        pygame.init()
         self.window = pygame.display.set_mode((width, height))
         self.gameStateManager = GameStateManager('menu')
         self.window.fill((0, 0, 0))
