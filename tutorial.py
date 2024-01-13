@@ -9,8 +9,8 @@ class tutorial_animations:
         self.next_frame_acc = 0.0
         self.running = True
 
-    def start(self):
-        self.speed_factor = 10.0
+    def start(self, speed_factor = 10.0):
+        self.speed_factor = speed_factor
         self.frame_index = 0
         self.next_frame_acc = 0.0
         self.running = True

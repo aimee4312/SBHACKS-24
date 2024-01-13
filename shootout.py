@@ -142,7 +142,7 @@ reload_anim_percentage_y = 0.1
 reload_anim_x = int(display_width * reload_anim_percentage_x)
 reload_anim_y = int(display_height * reload_anim_percentage_y)
 
-idle_anim_percentage_x = 0.7
+idle_anim_percentage_x = 0.3
 idle_anim_percentage_y = 0.1 
 idle_anim_x = int(display_width * idle_anim_percentage_x)
 idle_anim_y = int(display_height * idle_anim_percentage_y)
@@ -255,6 +255,7 @@ def update_idle(idle_anim):
 
 def start_game_display():
     idle_anim = tutorial.tutorial_animations(idle)
+    idle_anim.start(3)
     return idle_anim
 
 while running:
@@ -282,6 +283,7 @@ while running:
                 if event.key == pygame.K_t:
                     game_state = True
                     menu_state = False
+                    idle_anim = start_game_display()
                     main_scene.blit(background, (0, 0))
             if event.type == pygame.QUIT:
                 running = False
@@ -341,16 +343,13 @@ while running:
                 if event.key == pygame.K_t:
                     game_state = True
                     tutorial_state = False
+                    idle_anim = start_game_display()
                     main_scene.blit(background, (0, 0))
             if event.type == pygame.QUIT:
                 running = False
 
-    """ if game_state:
+    if game_state:
+        update_idle(idle_anim)
         main_scene.blit(background, (0, 0))
-        countdown = 5
-        while game_over_state != True:
-            clock.tick(countdown)
-            idle_anim = start_game_display()
-            update_idle(idle_anim)
-            if event.type == pygame.QUIT:
-                running = False """
+        if event.type == pygame.QUIT:
+            running = False
