@@ -474,22 +474,22 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                 if menu_state:
                     menu_display()
                     for event in pygame.event.get():
-                        if event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_h:
-                                #if event.type == STOP_GEST:
-                                tutorial_state = True
-                                menu_state = False
-                                main_scene.fill((0, 0, 0))
-                                pygame.display.update()
-                                shoot_anim, shield_anim, reload_anim = tutorial.start_tutorial(tutorial_shoot, tutorial_shield, tutorial_reload)
-                            if event.type == pygame.K_t:
-                                #if event.type == SHOOT_GEST:
-                                game_state = True
-                                menu_state = False
-                                idle_anim = computer.start_cp_anim(idle)
-                                cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
-                                
-                                main_scene.blit(background, (0, 0))
+                        # if event.type == pygame.KEYDOWN:
+                        #     if event.key == pygame.K_h:
+                        if event.type == STOP_GEST:
+                            tutorial_state = True
+                            menu_state = False
+                            main_scene.fill((0, 0, 0))
+                            pygame.display.update()
+                            shoot_anim, shield_anim, reload_anim = tutorial.start_tutorial(tutorial_shoot, tutorial_shield, tutorial_reload)
+                            #if event.type == pygame.K_t:
+                        if event.type == SHOOT_GEST:
+                            game_state = True
+                            menu_state = False
+                            idle_anim = computer.start_cp_anim(idle)
+                            cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
+                            
+                            main_scene.blit(background, (0, 0))
                         if event.type == pygame.QUIT:
                             running = False
 
