@@ -1,8 +1,6 @@
 import pygame
 import tutorial
 import computer
-import hands
-import os
 
 pygame.init()
 
@@ -217,8 +215,6 @@ shields_text_outline = score_font.render("Shields: " + str(shields), True, (0, 0
 shields_x = 850
 shields_y = 20
 
-
-
 # COUNTDOWN
 countdown_time = 1000
 current_countdown_int = 4
@@ -256,7 +252,6 @@ def update_stats(bullet = 0, shield = 0):
         shields_x = 850
         shields_y = 20
     stats_display()
-
 
 def stats_display():
     main_scene.blit(bullets_text_outline, (bullets_x - 2, bullets_y - 2))
