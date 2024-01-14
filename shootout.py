@@ -73,10 +73,10 @@ clock = pygame.time.Clock()
 # ------------- STATES & VARIABLES-------------
 running = True
 tutorial_state = False
-menu_state = True
+menu_state = False
 tutorial_state = False
 game_state = False
-game_over_state = False
+game_over_state = True
 player_can_make_move = False
 result_win = 1
 result_lose = 2
@@ -89,10 +89,6 @@ shields = 2
 # Tutorial
 font = pygame.font.Font(None, 36)
 text_color = (255, 255, 255)
-temp_start_text_percentage_x = 0.5
-temp_start_text_percentage_y = 0.8 
-temp_start_text_x = int(display_width * temp_start_text_percentage_x)
-temp_start_text_y = int(display_height * temp_start_text_percentage_y)
 
 tutorial_text_percentage_x = 0.5
 tutorial_text_percentage_y = 0.1 
@@ -120,7 +116,8 @@ reload_SFX = pygame.mixer.Sound("assets/sfx/reload.mp3")
 instruction_lines = [
     "Shoot: Attempt to shoot the opponent",
     "Shield: Protect yourself from an opponent's shot",
-    "Reload: Prepare the shotgun for the next shot"
+    "Reload: Prepare the shotgun for the next shot",
+    "Last one alive wins!"
 ]
 
 outcome_lines = [
@@ -150,11 +147,6 @@ reload_text_percentage_x = 0.8
 reload_text_percentage_y = 0.2 
 reload_text_x = int(display_width * reload_text_percentage_x)
 reload_text_y = int(display_height * reload_text_percentage_y)
-
-temp_start_text = font.render("Start", True, text_color)
-temp_start_rect = temp_start_text.get_rect(center=(temp_start_text_x, temp_start_text_y))
-main_scene.blit(temp_start_text, temp_start_rect)
-pygame.display.update()
 
 shoot_anim_percentage_x = -0.073
 shoot_anim_percentage_y = 0.1 
@@ -209,9 +201,9 @@ help_text_x = int(display_width * help_text_percentage_x)
 help_text_y = int(display_height * help_text_percentage_y)
 
 start_font = pygame.font.Font('freesansbold.ttf', 36)
-start_text = start_font.render("Give a thumbs up to start the game", True, (222, 169, 169))
-start_text_outline = start_font.render("Give a thumbs up to start the game", True, (0, 0, 0))
-start_text_percentage_x = 0.3
+start_text = start_font.render("Shoot to start the game", True, (222, 169, 169))
+start_text_outline = start_font.render("Shoot to start the game", True, (0, 0, 0))
+start_text_percentage_x = 0.4
 start_text_percentage_y = 0.5 
 start_text_x = int(display_width * start_text_percentage_x)
 start_text_y = int(display_height * start_text_percentage_y)
@@ -246,6 +238,32 @@ countdown_text_percentage_x = .5
 countdown_text_percentage_y = .15
 countdown_text_x = int(display_width * countdown_text_percentage_x)
 countdown_text_y = int(display_height * countdown_text_percentage_y)
+
+# END SCREEN
+game_over_font = pygame.font.Font('freesansbold.ttf', 84)
+winner_text = game_over_font.render("You Win!", True, (222, 169, 169))
+winner_text_outline = game_over_font.render("You Win!", True, (0, 0, 0))
+draw_text = game_over_font.render("It's a Draw", True, (222, 169, 169))
+draw_text_outline = game_over_font.render("It's a Draw", True, (0, 0, 0))
+loser_text = game_over_font.render("You Lose!", True, (222, 169, 169))
+loser_text_outline = game_over_font.render("You Lose!", True, (0, 0, 0))
+game_over_text_percentage_x = 0.2
+game_over_text_percentage_y = 0.3 
+game_over_text_x = int(display_width * game_over_text_percentage_x)
+game_over_text_y = int(display_height * game_over_text_percentage_y)
+
+# END SCREEN
+game_over_font = pygame.font.Font('freesansbold.ttf', 84)
+winner_text = game_over_font.render("You Win!", True, (222, 169, 169))
+winner_text_outline = game_over_font.render("You Win!", True, (0, 0, 0))
+draw_text = game_over_font.render("It's a Draw", True, (222, 169, 169))
+draw_text_outline = game_over_font.render("It's a Draw", True, (0, 0, 0))
+loser_text = game_over_font.render("You Lose!", True, (222, 169, 169))
+loser_text_outline = game_over_font.render("You Lose!", True, (0, 0, 0))
+game_over_text_percentage_x = 0.2
+game_over_text_percentage_y = 0.3 
+game_over_text_x = int(display_width * game_over_text_percentage_x)
+game_over_text_y = int(display_height * game_over_text_percentage_y)
 
 choices = {"shield": 2, "shoot": 0}
 
@@ -310,7 +328,7 @@ def stats_display():
     if shields == 2:
         main_scene.blit(shield_icon, (shields_x2, stats_y))
 
-def end_game_display():
+def end_game_display(result):
     main_scene.blit(wins_text_outline, (wins_x - 2, wins_y - 2))
     main_scene.blit(wins_text_outline, (wins_x - 2, wins_y))
     main_scene.blit(wins_text_outline, (wins_x, wins_y - 2))
@@ -326,6 +344,22 @@ def end_game_display():
     main_scene.blit(losses_text_outline, (losses_x + 2, losses_y))
     main_scene.blit(losses_text_outline, (losses_x + 2, losses_y + 2))
     main_scene.blit(losses_text, (losses_x, losses_y))
+
+    if result == 0:
+        x, y = winner_text, winner_text_outline
+    elif result == 1:
+        x, y = draw_text, draw_text_outline
+    else:
+        x, y = loser_text, loser_text_outline
+    
+    main_scene.blit(y, (game_over_text_x - 2, game_over_text_y - 2))
+    main_scene.blit(y, (game_over_text_x - 2, game_over_text_y))
+    main_scene.blit(y, (game_over_text_x, game_over_text_y - 2))
+    main_scene.blit(y, (game_over_text_x, game_over_text_y + 2))
+    main_scene.blit(y, (game_over_text_x + 2, game_over_text_y))
+    main_scene.blit(y, (game_over_text_x + 2, game_over_text_y + 2))
+    main_scene.blit(x, (game_over_text_x, game_over_text_y))
+
     pygame.display.update()
 
 def menu_display():
@@ -378,16 +412,6 @@ def game_results(result):
 
 
 while running:
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if temp_start_rect.collidepoint(event.pos):
-                tutorial_state = True
-                menu_state = False
-                main_scene.fill((0, 0, 0))
-                pygame.display.update(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
-                shoot_anim, shield_anim, reload_anim = tutorial.start_tutorial(tutorial_shoot, tutorial_shield, tutorial_reload)
-        if event.type == pygame.QUIT:
-                running = False
 
     if menu_state:
         menu_display()
@@ -448,9 +472,9 @@ while running:
             main_scene.blit(outcome_text, outcome_rect)
             outcome_y_offset += outcome_rect.height
 
-        win_text = font.render("Last one alive wins!", True, text_color)
-        win_rect = win_text.get_rect(center=(instruction_text_x * 1.25, instruction_text_y * 1.3))
-        main_scene.blit(win_text, win_rect)
+        cont_text = font.render("Shoot to continue or thumbs down to go back!", True, text_color)
+        cont_rect = cont_text.get_rect(center=(instruction_text_x * 1.3, instruction_text_y * 1.3))
+        main_scene.blit(cont_text, cont_rect)
         
         tutorial.update_tutorial(shoot_anim, shield_anim, reload_anim, clock, main_scene, shoot_anim_x, shoot_anim_y, shield_anim_x, shield_anim_y, reload_anim_x, reload_anim_y)
         main_scene.fill((0, 0, 0))
@@ -460,7 +484,6 @@ while running:
                     tutorial_state = False
                     menu_state = True
                     main_scene.blit(background, (0, 0))
-                    main_scene.blit(temp_start_text, temp_start_rect)
                 if event.key == pygame.K_t:
                     game_state = True
                     tutorial_state = False
@@ -575,3 +598,6 @@ while running:
             player_can_make_move = False
             current_countdown_int = 4
             
+    if game_over_state:
+        end_game_display(result)
+        
