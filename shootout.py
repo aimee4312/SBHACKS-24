@@ -476,6 +476,19 @@ def game_results(result):
     elif result == result_lose:
         losses += 1
     update_results()
+    
+def convert_gesture_name(gest_name):
+    match gest_name:
+        case "none":
+            return "None"
+        case "one":
+            return "Reload"
+        case "thumbsdown":
+            return "Thumbs Down"
+        case "stop":
+            return "Shield"
+        case "shoot":
+            return "Shoot"
 
 # recognizer options.
 # model saved in model_asset_path
@@ -685,8 +698,13 @@ with GestureRecognizer.create_from_options(options) as recognizer:
 
                 if game_state:
                     main_scene.blit(background, (0, 0))
+                    main_scene.blit(image, (600,600))
                     countdown_display()
                     stats_display()
+                    # display top_gesture
+                    user_gest_name = convert_gesture_name(top_gesture)
+                    top_gest_text = font.render(user_gest_name, True, (0, 0, 0))
+                    main_scene.blit(top_gest_text, (600, 600))
                     computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
                     player_move = None
                     
