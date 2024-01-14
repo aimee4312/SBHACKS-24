@@ -524,7 +524,7 @@ while running:
                         player_move = "shield"
         
         if player_move:
-            computer_move = computer.computer_choice(choices)
+            computer_move = computer.computer_choice(choices, bullets)
             if computer_move == "shoot":
                 gunshot_SFX.play()
                 computer.cp_move(shoot_sprite, clock, main_scene, cp_shoot_x, cp_shoot_y, background, cp_shoot)
@@ -582,7 +582,6 @@ while running:
             else:
                 if computer_move == "shoot":
                     death_SFX.play()
-                    result = game_results(result_lose)
                     game_results(result_lose)
                     recent_result = result_lose
                 elif computer_move == "shield":

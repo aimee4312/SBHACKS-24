@@ -2,9 +2,9 @@ import random
 import tutorial
 import pygame
 
-def computer_choice(choices):
+def computer_choice(choices, bullets):
     possible_choices = ["reload"]
-    if choices["shield"]:
+    if choices["shield"] and bullets > 0:
         possible_choices.append("shield")
     if choices["shoot"]:
         possible_choices.append("shoot")
