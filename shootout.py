@@ -546,18 +546,19 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                     tutorial.update_tutorial(shoot_anim, shield_anim, reload_anim, clock, main_scene, shoot_anim_x, shoot_anim_y, shield_anim_x, shield_anim_y, reload_anim_x, reload_anim_y)
                     main_scene.fill((0, 0, 0))
                     for event in pygame.event.get():
-                        if event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_b:
-                                tutorial_state = False
-                                menu_state = True
-                                main_scene.blit(background, (0, 0))
-                                main_scene.blit(temp_start_text, temp_start_rect)
-                            if event.key == pygame.K_t:
-                                game_state = True
-                                tutorial_state = False
-                                idle_anim = computer.start_cp_anim(idle)
-                                cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
-                                main_scene.blit(background, (0, 0))
+                        # go back with thumbs down
+                        if (event.type == THUMBS_DOWN_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_b):
+                            tutorial_state = False
+                            menu_state = True
+                            main_scene.blit(background, (0, 0))
+                            main_scene.blit(temp_start_text, temp_start_rect)
+                        # shoot to continue to game
+                        if (event.type == SHOOT_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_t):
+                            game_state = True
+                            tutorial_state = False
+                            idle_anim = computer.start_cp_anim(idle)
+                            cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
+                            main_scene.blit(background, (0, 0))
                         if event.type == pygame.QUIT:
                             running = False
 
