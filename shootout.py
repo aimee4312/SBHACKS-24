@@ -2,6 +2,45 @@ import pygame
 import tutorial
 import computer
 
+import mediapipe as mp
+import cv2
+import numpy as np
+
+# initializing hand recognition stuff in mediapipe
+mp_hands = mp.solutions.hands
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
+
+# initializing video capture w/ opencv
+cap = cv2.VideoCapture(0)
+fps = cap.get(cv2.CAP_PROP_FPS)
+print(f"FPS: {fps}")
+frame_count = 0
+
+# Gesture Recognizer options (what trains the model)
+BaseOptions = mp.tasks.BaseOptions
+GestureRecognizer = mp.tasks.vision.GestureRecognizer
+GestureRecognizerOptions = mp.tasks.vision.GestureRecognizerOptions
+GestureRecognizerResult = mp.tasks.vision.GestureRecognizerResult
+VisionRunningMode = mp.tasks.vision.RunningMode
+
+# saves GestureRecognizer results here
+prev_result = None
+
+# Create a gesture recognizer instance with the live stream mode:
+def save_result(result: GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
+    global prev_result
+    prev_result = result
+
+# # recognizer options.
+# # model saved in model_asset_path
+# # running mode is set to live stream
+# # print_result saves the result
+# options = GestureRecognizerOptions(
+#     base_options=BaseOptions(model_asset_path='models/gesture_recognizer_readd_thumb.task'),
+#     running_mode=VisionRunningMode.LIVE_STREAM,
+#     result_callback=save_result)   
+
 pygame.init()
 pygame.mixer.init()
 #pygame.mixer.music.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/music/yeehawww.mp3")
@@ -86,6 +125,13 @@ wins = 0
 losses = 0
 bullets = 0
 shields = 2
+
+# ------------- GESTURE EVENTS -------------
+POINT_ONE_GEST = pygame.USEREVENT + 1
+STOP_GEST = pygame.USEREVENT + 2
+SHOOT_GEST = pygame.USEREVENT + 3
+THUMBS_DOWN_GEST = pygame.USEREVENT + 4
+
 # ------------- TEXT PLACEMENT -------------
 # Tutorial
 font = pygame.font.Font(None, 36)
@@ -221,6 +267,12 @@ losses_text_outline = score_font.render("Losses: " + str(losses), True, (0, 0, 0
 losses_x = 20
 losses_y = 20
 
+# GESTURE RECOGNITION
+gesture_text = score_font.render("Losses: " + str(losses), True, (255, 255, 255))
+gesture_text_outline = score_font.render("Losses: " + str(losses), True, (0, 0, 0))
+gesture_x = 600
+gesture_y = 600
+
 # bullets_text = score_font.render("Bullets: " + str(bullets), True, (255, 255, 255))
 # bullets_text_outline = score_font.render("Bullets: " + str(bullets), True, (0, 0, 0))
 # bullets_x = 20
@@ -256,17 +308,17 @@ game_over_text_y = int(display_height * game_over_text_percentage_y)
 
 
 quit_font = pygame.font.Font('freesansbold.ttf', 36)
-quit_text = quit_font.render("Point your thumb down to quit", True, (255, 255, 255))
-quit_text_outline = quit_font.render("Point your thumb down to quit", True, (0, 0, 0))
-quit_text_percentage_x = 0.34
+quit_text = quit_font.render("Press 'q' to quit", True, (255, 255, 255))
+quit_text_outline = quit_font.render("Press 'q' to quit", True, (0, 0, 0))
+quit_text_percentage_x = 0.42
 quit_text_percentage_y = 0.75
 quit_text_x = int(display_width * quit_text_percentage_x)
 quit_text_y = int(display_height * quit_text_percentage_y)
 
 replay_font = pygame.font.Font('freesansbold.ttf', 36)
-replay_text = replay_font.render("Shoot to replay the game", True, (222, 169, 169))
-replay_text_outline = replay_font.render("Shoot to replay the game", True, (0, 0, 0))
-replay_text_percentage_x = 0.37
+replay_text = replay_font.render("Press space to replay the game", True, (222, 169, 169))
+replay_text_outline = replay_font.render("Press space to replay the game", True, (0, 0, 0))
+replay_text_percentage_x = 0.33
 replay_text_percentage_y = 0.8 
 replay_text_x = int(display_width * replay_text_percentage_x)
 replay_text_y = int(display_height * replay_text_percentage_y)
@@ -431,232 +483,397 @@ def game_results(result):
     elif result == result_lose:
         losses += 1
     update_results()
+    
+def convert_gesture_name(gest_name):
+    match gest_name:
+        case "none":
+            return "None"
+        case "one":
+            return "Reload"
+        case "thumbsdown":
+            return "Thumbs Down"
+        case "stop":
+            return "Shield"
+        case "shoot":
+            return "Shoot"
+        
+def show_gesture(gest_name):
+    
+    gesture_font = pygame.font.Font('freesansbold.ttf', 36)
+    
+    gesture_text = gesture_font.render(convert_gesture_name(gest_name), True, (255, 255, 255))
+    gesture_text_outline = gesture_font.render(convert_gesture_name(gest_name), True, (0, 0, 0))
+    gesture_x = 600
+    gesture_y = 600
+    
+    main_scene.blit(gesture_text_outline, (gesture_x - 2, gesture_y - 2))
+    main_scene.blit(gesture_text_outline, (gesture_x - 2, gesture_y))
+    main_scene.blit(gesture_text_outline, (gesture_x, gesture_y - 2))
+    main_scene.blit(gesture_text_outline, (gesture_x, gesture_y + 2))
+    main_scene.blit(gesture_text_outline, (gesture_x + 2, gesture_y))
+    main_scene.blit(gesture_text_outline, (gesture_x + 2, gesture_y + 2))
+    main_scene.blit(gesture_text, (gesture_x, gesture_y))
+    
 
+# recognizer options.
+# model saved in model_asset_path
+# running mode is set to live stream
+# print_result saves the result
+options = GestureRecognizerOptions(
+    base_options=BaseOptions(model_asset_path='models/gesture_recognizer_readd_thumb.task'),
+    running_mode=VisionRunningMode.LIVE_STREAM,
+    result_callback=save_result)   
+with GestureRecognizer.create_from_options(options) as recognizer:
+    # The detector is initialized. Use it here.
+    with mp_hands.Hands(
+        min_detection_confidence=0.5,
+        min_tracking_confidence=0.5) as hands:
+            while running and cap.isOpened():
+                success, img = cap.read()
+                img = cv2.resize(img, (360, 270))
+                frame_count += 1
+                cap_image = img.copy()
+                if not success:
+                    print("Ignoring empty camera frame.")
+                    continue
+                
+                cap_image.flags.writeable = False
+                cap_image = cv2.cvtColor(cap_image, cv2.COLOR_BGR2RGB)
+                results = hands.process(cap_image)
+                
+                # Drawing hand annotations on image
+                cap_image.flags.writeable = True
+                # changing color output?
+                cap_image = cv2.cvtColor(cap_image, cv2.COLOR_RGB2BGR)
+                
+                # # creating image in pygame to draw hands onto
+                # screen = pygame.display.get_surface()
 
-while running:
+                # capture = pygame.surfarray.pixels3d(screen)
+                # capture = capture.transpose([1, 0, 2])
+                # capture_bgr = cv2.cvtColor(capture, cv2.COLOR_RGB2BGR)
+                
+                hand_img = np.empty(cap_image.shape)
+                hand_img.fill(255)
+                
+                # collection of detected hands
+                if results.multi_hand_landmarks:
+                    # for each hand, draw the landmarks
+                    for hand_landmarks in results.multi_hand_landmarks:
+                        mp_drawing.draw_landmarks(
+                            cap_image,
+                            #hand_img,
+                            hand_landmarks,
+                            mp_hands.HAND_CONNECTIONS,
+                            mp_drawing_styles.get_default_hand_landmarks_style(),
+                            mp_drawing_styles.get_default_hand_connections_style())
+                # Flipping image for selfie display
+                
+                # Processing result
+                top_gesture = ""
+                #print(prev_result)
+                if prev_result is not None and len(prev_result.gestures) > 0:
+                    top_gesture = prev_result.gestures[0][0].category_name
+                    print(f"top_gesture: {top_gesture}")
+                    #print(f"type: {type(top_gesture)}")
+                    match top_gesture:
+                        case "stop":
+                            pygame.event.post(pygame.event.Event(STOP_GEST))
+                            print("Gesturing stop")
+                        case "shoot":
+                            pygame.event.post(pygame.event.Event(SHOOT_GEST))
+                            print("Gesturing shoot")
+                        case "thumbsdown":
+                            pygame.event.post(pygame.event.Event(THUMBS_DOWN_GEST))
+                            print("Gesturing thumbs down")
+                        case "one":
+                            pygame.event.post(pygame.event.Event(POINT_ONE_GEST))
+                            print("Gesturing point/one")
+                
+                # Text to display hand value
+                # cv_font = cv2.FONT_HERSHEY_DUPLEX
+                # cv2.putText(image,  
+                #     str(top_gesture),  
+                #     (50, 50),
+                #     cv_font, 1,  
+                #     (0, 255, 255),  
+                #     2,  
+                #     cv2.LINE_4)
+                
+                
+                cap_image = cv2.cvtColor(cap_image, cv2.COLOR_BGR2RGB)
+                cap_image = np.rot90(cap_image)
+                cap_image = pygame.surfarray.make_surface(cap_image)
+                main_scene.blit(cap_image, (600,600))
+                #pygame.display.update()
+                # TODO: fix video display
 
-    if menu_state:
-        menu_display()
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_h:
-                    tutorial_state = True
-                    menu_state = False
-                    main_scene.fill((0, 0, 0))
-                    pygame.display.update()
-                    shoot_anim, shield_anim, reload_anim = tutorial.start_tutorial(tutorial_shoot, tutorial_shield, tutorial_reload)
-                if event.key == pygame.K_t:
-                    game_state = True
-                    menu_state = False
-                    idle_anim = computer.start_cp_anim(idle)
-                    cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
+                        
+                # Displays video
+                #cv2.imshow("MediaPipe Hands", cv2.flip(image, 1))
+                #cv2.imshow("MediaPipe Hands", cv2.flip(hand_img, 1))
+                            
+                # recognition stuff
+                mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=img)
+                     
+                
+                # timestamp is in milliseconds
+                timestamp = frame_count * 1000/fps
+                #print(f"timestamp: {timestamp}")
+                            
+                recognizer.recognize_async(mp_image, int(timestamp))
+
+                if cv2.waitKey(5) & 0xFF == 27:
+                    break               
+                
+                
+                # for event in pygame.event.get():
+                #     if event.type == pygame.MOUSEBUTTONDOWN:
+                #         if temp_start_rect.collidepoint(event.pos):
+                #             tutorial_state = True
+                #             menu_state = False
+                #             main_scene.fill((0, 0, 0))
+                #             pygame.display.update(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
+                #             shoot_anim, shield_anim, reload_anim = tutorial.start_tutorial(tutorial_shoot, tutorial_shield, tutorial_reload)
+                #     if event.type == pygame.QUIT:
+                #             running = False
+
+                if menu_state:
+                    menu_display()
+                    for event in pygame.event.get():
+                        # if event.type == pygame.KEYDOWN:
+                        #     if event.key == pygame.K_h:
+                        if (event.type == STOP_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_h):
+                            tutorial_state = True
+                            menu_state = False
+                            main_scene.fill((0, 0, 0))
+                            pygame.display.update()
+                            shoot_anim, shield_anim, reload_anim = tutorial.start_tutorial(tutorial_shoot, tutorial_shield, tutorial_reload)
+                            #if event.type == pygame.K_t:
+                        if (event.type == SHOOT_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_t):
+                            game_state = True
+                            menu_state = False
+                            idle_anim = computer.start_cp_anim(idle)
+                            cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
+                            
+                            main_scene.blit(background, (0, 0))
+                        if event.type == pygame.QUIT:
+                            running = False
+
+                if tutorial_state:
+                    tutorial_text = font.render("Tutorial", True, text_color)
+                    tutorial_rect = tutorial_text.get_rect(center=(tutorial_text_x, tutorial_text_y))
+                    main_scene.blit(tutorial_text, tutorial_rect)
+
+                    shoot_text = font.render("Shoot", True, text_color)
+                    shoot_rect = shoot_text.get_rect(center=(shoot_text_x, shoot_text_y))
+                    main_scene.blit(shoot_text, shoot_rect)
+
+                    shield_text = font.render("Shield", True, text_color)
+                    shield_rect = shield_text.get_rect(center=(shield_text_x, shield_text_y))
+                    main_scene.blit(shield_text, shield_rect)
+
+                    reload_text = font.render("Reload", True, text_color)
+                    reload_rect = reload_text.get_rect(center=(reload_text_x, reload_text_y))
+                    main_scene.blit(reload_text, reload_rect)
+
+                    instruction_text = font.render("You have 3 possible actions:", True, text_color)
+                    instruction_rect = instruction_text.get_rect(center=(instruction_text_x * 0.6, instruction_text_y * 0.75))
+                    main_scene.blit(instruction_text, instruction_rect)
+
+                    instruction_y_offset = 5
+                    for line in instruction_lines:
+                        outcome_text = font.render(line, True, text_color)
+                        outcome_rect = outcome_text.get_rect(center=(instruction_text_x * 0.6, instruction_text_y * 0.8 + instruction_y_offset))
+                        main_scene.blit(outcome_text, outcome_rect)
+                        instruction_y_offset += outcome_rect.height
+
+                    outcome_text = font.render("Outcomes:", True, text_color)
+                    outcome_rect = outcome_text.get_rect(center=(instruction_text_x * 1.8, instruction_text_y * 0.75))
+                    main_scene.blit(outcome_text, outcome_rect)
+
+                    outcome_y_offset = 1
+                    for line in outcome_lines:
+                        outcome_text = font.render(line, True, text_color)
+                        outcome_rect = outcome_text.get_rect(center=(instruction_text_x * 1.8, instruction_text_y * 0.8 + outcome_y_offset))
+                        main_scene.blit(outcome_text, outcome_rect)
+                        outcome_y_offset += outcome_rect.height
+
+                    cont_text = font.render("Shoot to continue or thumbs down to go back!", True, text_color)
+                    cont_rect = cont_text.get_rect(center=(instruction_text_x * 1.3, instruction_text_y * 1.3))
+                    main_scene.blit(cont_text, cont_rect)
                     
+                    tutorial.update_tutorial(shoot_anim, shield_anim, reload_anim, clock, main_scene, shoot_anim_x, shoot_anim_y, shield_anim_x, shield_anim_y, reload_anim_x, reload_anim_y)
+                    main_scene.fill((0, 0, 0))
+                    for event in pygame.event.get():
+                        # go back with thumbs down
+                        if (event.type == THUMBS_DOWN_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_b):
+                            tutorial_state = False
+                            menu_state = True
+                            main_scene.blit(background, (0, 0))
+                                # shoot to continue to game
+                        if (event.type == SHOOT_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_t):
+                            game_state = True
+                            tutorial_state = False
+                            idle_anim = computer.start_cp_anim(idle)
+                            cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
+                            main_scene.blit(background, (0, 0))
+                        if event.type == pygame.QUIT:
+                            running = False
+
+                if game_state:
                     main_scene.blit(background, (0, 0))
-            if event.type == pygame.QUIT:
-                running = False
+                    main_scene.blit(cap_image, (600,600))
+                    countdown_display()
+                    stats_display()
+                    
+                    # display top_gesture
+                    show_gesture(top_gesture)
+                    # user_gest_name = convert_gesture_name(top_gesture)
+                    # top_gest_text = font.render(user_gest_name, True, (0, 0, 0))
+                    # main_scene.blit(top_gest_text, (600, 600))
+                    
+                    computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
+                
+                    
+                    player_move = None
+                    
+                    if not player_can_make_move:
+                        countdown_time -= clock.get_time()           
+                        if countdown_time <= 0:
+                            current_countdown_int-= 1
+                            countdown_text = countdown_font.render(str(current_countdown_int), True, (222, 169, 169))
+                            countdown_text_outline = countdown_font.render(str(current_countdown_int), True, (0, 0, 0))
+                            countdown_time = 1000           
+                        if current_countdown_int <= 0:
+                            player_can_make_move = True
+                    
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            running = False
+                        if player_can_make_move:
+                            if (event.type == SHOOT_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
+                                player_move = "shoot"
+                            elif (event.type == POINT_ONE_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_w):
+                                player_move = "reload"
+                            elif (event.type == STOP_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_e):
+                                player_move = "shield"
+                    
+                    if player_move:
+                        computer_move = computer.computer_choice(choices, bullets, shields)
+                        if computer_move == "shoot":
+                            gunshot_SFX.play()
+                            computer.cp_move(shoot_sprite, clock, main_scene, cp_shoot_x, cp_shoot_y, background, cp_shoot)
+                        elif computer_move == "shield":
+                            shield_SFX.play()
+                            computer.cp_move(shield_sprite, clock, main_scene, cp_shield_x, cp_shield_y, background, cp_shield)
+                            pygame.display.update()
+                        elif computer_move == "reload":
+                            reload_SFX.play()
+                            computer.cp_move(reload_sprite, clock, main_scene, cp_reload_x, cp_reload_y, background, cp_reload)
+                        else:
+                            computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
+                            pygame.display.update()
+                            pygame.time.delay(300)
 
-    if tutorial_state:
-        tutorial_text = font.render("Tutorial", True, text_color)
-        tutorial_rect = tutorial_text.get_rect(center=(tutorial_text_x, tutorial_text_y))
-        main_scene.blit(tutorial_text, tutorial_rect)
-
-        shoot_text = font.render("Shoot", True, text_color)
-        shoot_rect = shoot_text.get_rect(center=(shoot_text_x, shoot_text_y))
-        main_scene.blit(shoot_text, shoot_rect)
-
-        shield_text = font.render("Shield", True, text_color)
-        shield_rect = shield_text.get_rect(center=(shield_text_x, shield_text_y))
-        main_scene.blit(shield_text, shield_rect)
-
-        reload_text = font.render("Reload", True, text_color)
-        reload_rect = reload_text.get_rect(center=(reload_text_x, reload_text_y))
-        main_scene.blit(reload_text, reload_rect)
-
-        instruction_text = font.render("You have 3 possible actions:", True, text_color)
-        instruction_rect = instruction_text.get_rect(center=(instruction_text_x * 0.6, instruction_text_y * 0.75))
-        main_scene.blit(instruction_text, instruction_rect)
-
-        instruction_y_offset = 5
-        for line in instruction_lines:
-            outcome_text = font.render(line, True, text_color)
-            outcome_rect = outcome_text.get_rect(center=(instruction_text_x * 0.6, instruction_text_y * 0.8 + instruction_y_offset))
-            main_scene.blit(outcome_text, outcome_rect)
-            instruction_y_offset += outcome_rect.height
-
-        outcome_text = font.render("Outcomes:", True, text_color)
-        outcome_rect = outcome_text.get_rect(center=(instruction_text_x * 1.8, instruction_text_y * 0.75))
-        main_scene.blit(outcome_text, outcome_rect)
-
-        outcome_y_offset = 1
-        for line in outcome_lines:
-            outcome_text = font.render(line, True, text_color)
-            outcome_rect = outcome_text.get_rect(center=(instruction_text_x * 1.8, instruction_text_y * 0.8 + outcome_y_offset))
-            main_scene.blit(outcome_text, outcome_rect)
-            outcome_y_offset += outcome_rect.height
-
-        cont_text = font.render("Shoot to continue or thumbs down to go back!", True, text_color)
-        cont_rect = cont_text.get_rect(center=(instruction_text_x * 1.3, instruction_text_y * 1.3))
-        main_scene.blit(cont_text, cont_rect)
-        
-        tutorial.update_tutorial(shoot_anim, shield_anim, reload_anim, clock, main_scene, shoot_anim_x, shoot_anim_y, shield_anim_x, shield_anim_y, reload_anim_x, reload_anim_y)
-        main_scene.fill((0, 0, 0))
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_b:
-                    tutorial_state = False
-                    menu_state = True
-                    main_scene.blit(background, (0, 0))
-                if event.key == pygame.K_t:
-                    game_state = True
-                    tutorial_state = False
-                    idle_anim = computer.start_cp_anim(idle)
-                    cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
-                    main_scene.blit(background, (0, 0))
-            if event.type == pygame.QUIT:
-                running = False
-
-    if game_state:
-        main_scene.blit(background, (0, 0))
-        countdown_display()
-        stats_display()
-        computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
-        player_move = None
-        
-        if not player_can_make_move:
-            countdown_time -= clock.get_time()           
-            if countdown_time <= 0:
-                current_countdown_int-= 1
-                countdown_text = countdown_font.render(str(current_countdown_int), True, (222, 169, 169))
-                countdown_text_outline = countdown_font.render(str(current_countdown_int), True, (0, 0, 0))
-                countdown_time = 1000           
-            if current_countdown_int <= 0:
-                player_can_make_move = True
-        
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if player_can_make_move:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q:
-                        player_move = "shoot"
-                    elif event.key == pygame.K_w:
-                        player_move = "reload"
-                    elif event.key == pygame.K_e:
-                        player_move = "shield"
-        
-        if player_move:
-            computer_move = computer.computer_choice(choices, bullets, shields)
-            if computer_move == "shoot":
-                computer.cp_move(shoot_sprite, clock, main_scene, cp_shoot_x, cp_shoot_y, background, cp_shoot)
-            elif computer_move == "shield":
-                computer.cp_move(shield_sprite, clock, main_scene, cp_shield_x, cp_shield_y, background, cp_shield)
-                pygame.display.update()
-            elif computer_move == "reload":
-                computer.cp_move(reload_sprite, clock, main_scene, cp_reload_x, cp_reload_y, background, cp_reload)
-            else:
-                computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
-                pygame.display.update()
-                pygame.time.delay(300)
-
-            if player_move == "shoot" and bullets > 0:
-                if computer_move == "shoot":
-                    gunshot_SFX.play()
-                    gunshot_SFX.play()
-                    game_results(result_tie)
-                    recent_result = result_tie
-                    game_over_state = True
-                    game_state = False
-                elif computer_move == "shield":
-                    shield_SFX.play()
-                    gunblock_SFX.play()
-                    bullets -= 1
-                    choices["shield"] -= 1
-                else:
-                    gunshot_SFX.play()
-                    reload_SFX.play()
-                    game_results(result_win)
-                    recent_result = result_win
-                    game_over_state = True
-                    game_state = False
-            elif player_move == "shoot" and bullets == 0:
-                if computer_move == "shoot":
-                    empty_SFX.play()
-                    gunshot_SFX.play()
-                    game_results(result_lose)
-                    recent_result = result_lose
-                    death_SFX.play()
-                    game_over_state = True
-                    game_state = False
-                elif computer_move == "shield":
-                    empty_SFX.play()
-                    shield_SFX.play()
-                    choices["shield"] -= 1
-                else:
-                    empty_SFX.play()
-                    reload_SFX.play()
-                    if choices["shoot"] < 2:
-                        choices["shoot"] += 1
-            elif player_move == "shield" and shields > 0:
-                shield_SFX.play()
-                shields -= 1
-                if computer_move == "shoot":
-                    gunblock_SFX.play()
-                    choices["shoot"] -= 1
-                elif computer_move == "shield":
-                    shield_SFX.play()
-                    choices["shield"] -= 1
-                else:
-                    reload_SFX.play()
-                    if choices["shoot"] < 2:
-                        choices["shoot"] += 1
-            elif player_move == "shield" and shields == 0:
-                if computer_move == "shoot":
-                    gunshot_SFX.play()
-                    death_SFX.play()
-                    game_results(result_lose)
-                    recent_result = result_lose
-                    game_over_state = True
-                    game_state = False
-                elif computer_move == "shield":
-                    shield_SFX.play()
-                    choices["shield"] -= 1
-                else:
-                    reload_SFX.play()
-                    if choices["shoot"] < 2:
-                        choices["shoot"] += 1
-            else:
-                if computer_move == "shoot":
-                    reload_SFX.play()
-                    gunshot_SFX.play()
-                    death_SFX.play()
-                    game_results(result_lose)
-                    recent_result = result_lose
-                    game_over_state = True
-                    game_state = False
-                elif computer_move == "shield":
-                    reload_SFX.play()
-                    shield_SFX.play()
-                    choices["shield"] -= 1
-                    if bullets < 2:
-                        bullets += 1
-                else:
-                    reload_SFX.play()
-                    if bullets < 2:
-                        bullets += 1
-                    if choices["shoot"] < 2:
-                        choices["shoot"] += 1
-            player_can_make_move = False
-            current_countdown_int = 4
+                        if player_move == "shoot" and bullets > 0:
+                            if computer_move == "shoot":
+                                gunshot_SFX.play()
+                                gunshot_SFX.play()
+                                game_results(result_tie)
+                                recent_result = result_tie
+                                game_over_state = True
+                                game_state = False
+                            elif computer_move == "shield":
+                                shield_SFX.play()
+                                gunblock_SFX.play()
+                                bullets -= 1
+                                choices["shield"] -= 1
+                            else:
+                                gunshot_SFX.play()
+                                reload_SFX.play()
+                                game_results(result_win)
+                                recent_result = result_win
+                                game_over_state = True
+                                game_state = False
+                        elif player_move == "shoot" and bullets == 0:
+                            if computer_move == "shoot":
+                                empty_SFX.play()
+                                gunshot_SFX.play()
+                                game_results(result_lose)
+                                recent_result = result_lose
+                                death_SFX.play()
+                                game_over_state = True
+                                game_state = False
+                            elif computer_move == "shield":
+                                empty_SFX.play()
+                                shield_SFX.play()
+                                choices["shield"] -= 1
+                            else:
+                                empty_SFX.play()
+                                reload_SFX.play()
+                                if choices["shoot"] < 2:
+                                    choices["shoot"] += 1
+                        elif player_move == "shield" and shields > 0:
+                            shield_SFX.play()
+                            shields -= 1
+                            if computer_move == "shoot":
+                                gunblock_SFX.play()
+                                choices["shoot"] -= 1
+                            elif computer_move == "shield":
+                                shield_SFX.play()
+                                choices["shield"] -= 1
+                            else:
+                                reload_SFX.play()
+                                if choices["shoot"] < 2:
+                                    choices["shoot"] += 1
+                        elif player_move == "shield" and shields == 0:
+                            if computer_move == "shoot":
+                                gunshot_SFX.play()
+                                death_SFX.play()
+                                game_results(result_lose)
+                                recent_result = result_lose
+                                game_over_state = True
+                                game_state = False
+                            elif computer_move == "shield":
+                                shield_SFX.play()
+                                choices["shield"] -= 1
+                            else:
+                                reload_SFX.play()
+                                if choices["shoot"] < 2:
+                                    choices["shoot"] += 1
+                        else:
+                            if computer_move == "shoot":
+                                reload_SFX.play()
+                                gunshot_SFX.play()
+                                death_SFX.play()
+                                game_results(result_lose)
+                                recent_result = result_lose
+                                game_over_state = True
+                                game_state = False
+                            elif computer_move == "shield":
+                                reload_SFX.play()
+                                shield_SFX.play()
+                                choices["shield"] -= 1
+                                if bullets < 2:
+                                    bullets += 1
+                            else:
+                                reload_SFX.play()
+                                if bullets < 2:
+                                    bullets += 1
+                                if choices["shoot"] < 2:
+                                    choices["shoot"] += 1
+                        player_can_make_move = False
+                        current_countdown_int = 4
             
-    if game_over_state:
-        end_game_display(recent_result)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    bullets = 0
-                    shields = 2
-                    choices = {"shield": 2, "shoot": 0}
-                    game_state = True
-                    game_over_state = False
+                if game_over_state:
+                    end_game_display(recent_result)
+                    for event in pygame.event.get():
+                        if (event.type == pygame.QUIT) or (event.type == pygame.KEYDOWN) and (event.key == pygame.K_q):
+                            running = False
+                        if (event.type == pygame.KEYDOWN) and (event.key == pygame.K_SPACE):
+                            bullets = 0
+                            shields = 2
+                            choices = {"shield": 2, "shoot": 0}
+                            game_state = True
+                            game_over_state = False
