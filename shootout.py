@@ -4,33 +4,32 @@ import computer
 
 pygame.init()
 pygame.mixer.init()
-pygame.mixer.music.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/music/yeehawww.mp3")
-#pygame.mixer.music.load("assets/music/yeehawww.mp3")
+#pygame.mixer.music.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/music/yeehawww.mp3")
+pygame.mixer.music.load("assets/music/yeehawww.mp3")
 pygame.mixer.music.play(-1)
 
 # ------------- SPRITES -------------
-shoot_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png"),
-                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot2.png"),
-                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot3.png"),
-                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png")]
-reload_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png"),
-                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload2.png"),
-                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png")]
-shield_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shield.png")]
+# shoot_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png"),
+#                  pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot2.png"),
+#                  pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot3.png"),
+#                  pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png")]
+# reload_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png"),
+#                  pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload2.png"),
+#                  pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png")]
+# shield_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shield.png")]
 
-tutorial_shoot = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png"),
-               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s2.png"),
-               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s3.png"),
-               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png")]
-tutorial_shield = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_sh.png")]
-tutorial_reload = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png"),
-               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r2.png"),
-               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png")]
-icon = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/icon.png")
-idle = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle1.PNG"),
-         pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle2.png")]
+# tutorial_shoot = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png"),
+#                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s2.png"),
+#                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s3.png"),
+#                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png")]
+# tutorial_shield = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_sh.png")]
+# tutorial_reload = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png"),
+#                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r2.png"),
+#                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png")]
+# icon = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/icon.png")
+# idle = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle1.PNG"),
+#          pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle2.png")]
 
-""" 
 shoot_sprite = [pygame.image.load("sprites/computer/shoot1.png"),
                 pygame.image.load("sprites/computer/shoot2.png"),
                 pygame.image.load("sprites/computer/shoot3.png"),
@@ -50,7 +49,11 @@ tutorial_reload = [pygame.image.load("sprites/tutorial/tutorial_r1.png"),
               pygame.image.load("sprites/tutorial/tutorial_r1.png")]
 icon = pygame.image.load("sprites/icon.png")
 idle = [pygame.image.load("sprites/computer/idle1.PNG"),
-        pygame.image.load("sprites/computer/idle2.png")] """
+        pygame.image.load("sprites/computer/idle2.png")]
+shield_icon = pygame.image.load("sprites/shield_icon.png")
+bullet_icon = pygame.image.load("sprites/bullet_icon.png")
+bullet_icon_outline = pygame.image.load("sprites/bullet_icon_outline.png")
+
 # ------------- SCENE MANAGEMENT-------------
 main_scene_info = pygame.display.Info()
 display_width = main_scene_info.current_w
@@ -59,8 +62,8 @@ display_height = main_scene_info.current_h
 main_scene_WIDTH = display_width
 main_scene_HEIGHT = display_height
 main_scene = pygame.display.set_mode((main_scene_WIDTH, main_scene_HEIGHT))
-background = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/background/background.jpeg")
-#background = pygame.image.load("assets/background/background.jpeg")
+#background = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/background/background.jpeg")
+background = pygame.image.load("assets/background/background.jpeg")
 pygame.display.set_caption("ShootOut", "ShootOut")
 background = pygame.transform.scale(background, (main_scene_WIDTH, main_scene_HEIGHT))
 pygame.display.set_icon(icon)
@@ -102,18 +105,18 @@ instruction_text_x = int(display_width * instruction_text_percentage_x)
 instruction_text_y = int(display_height * instruction_text_percentage_y)
 
 # ------------- SFX -------------
-gunshot_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/gunshot.mp3")
-death_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/death.mp3")
-gunblock_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/gunblock.mp3")
-shield_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/shield_questionmark.mp3")
-reload_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/reload.mp3")
-""" 
+# gunshot_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/gunshot.mp3")
+# death_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/death.mp3")
+# gunblock_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/gunblock.mp3")
+# shield_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/shield_questionmark.mp3")
+# reload_SFX = pygame.mixer.Sound("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/sfx/reload.mp3")
+
 gunshot_SFX = pygame.mixer.Sound("assets/sfx/gunshot.mp3")
 death_SFX = pygame.mixer.Sound("assets/sfx/death.mp3")
 gunblock_SFX = pygame.mixer.Sound("assets/sfx/gunblock.mp3")
 shield_SFX = pygame.mixer.Sound("assets/sfx/shield_questionmark.mp3")
 reload_SFX = pygame.mixer.Sound("assets/sfx/reload.mp3")
- """
+
 instruction_lines = [
     "Shoot: Attempt to shoot the opponent",
     "Shield: Protect yourself from an opponent's shot",
@@ -257,36 +260,55 @@ def update_results():
     losses_x = 850
     losses_y = 20
 
-def update_stats(bullet = 0, shield = 0):
-    global bullets_text, bullets_text_outline, bullets_x, bullets_y, shields_text, shields_text_outline, shields_x, shields_y
-    if bullet:
-        bullets_text = score_font.render("Bullets: " + str(bullets), True, (255, 255, 255))
-        bullets_text_outline = score_font.render("Bullets: " + str(bullets), True, (0, 0, 0))
-        bullets_x = 20
-        bullets_y = 20
-    if shield:
-        shields_text = score_font.render("Shields: " + str(shields), True, (255, 255, 255))
-        shields_text_outline = score_font.render("Shields: " + str(shields), True, (0, 0, 0))
-        shields_x = 850
-        shields_y = 20
-    stats_display()
+# def update_stats(bullet = 0, shield = 0):
+#     global bullets_text, bullets_text_outline, bullets_x, bullets_y, shields_text, shields_text_outline, shields_x, shields_y
+#     if bullet:
+#         bullets_text = score_font.render("Bullets: " + str(bullets), True, (255, 255, 255))
+#         bullets_text_outline = score_font.render("Bullets: " + str(bullets), True, (0, 0, 0))
+#         bullets_x = 20
+#         bullets_y = 20
+
+#     if shield:
+#         shields_text = score_font.render("Shields: " + str(shields), True, (255, 255, 255))
+#         shields_text_outline = score_font.render("Shields: " + str(shields), True, (0, 0, 0))
+#         shields_x = 850
+#         shields_y = 20
+#     stats_display()
 
 def stats_display():
-    main_scene.blit(bullets_text_outline, (bullets_x - 2, bullets_y - 2))
-    main_scene.blit(bullets_text_outline, (bullets_x - 2, bullets_y))
-    main_scene.blit(bullets_text_outline, (bullets_x, bullets_y - 2))
-    main_scene.blit(bullets_text_outline, (bullets_x, bullets_y + 2))
-    main_scene.blit(bullets_text_outline, (bullets_x + 2, bullets_y))
-    main_scene.blit(bullets_text_outline, (bullets_x + 2, bullets_y + 2))
-    main_scene.blit(bullets_text, (bullets_x, bullets_y))
+    # main_scene.blit(bullets_text_outline, (bullets_x - 2, bullets_y - 2))
+    # main_scene.blit(bullets_text_outline, (bullets_x - 2, bullets_y))
+    # main_scene.blit(bullets_text_outline, (bullets_x, bullets_y - 2))
+    # main_scene.blit(bullets_text_outline, (bullets_x, bullets_y + 2))
+    # main_scene.blit(bullets_text_outline, (bullets_x + 2, bullets_y))
+    # main_scene.blit(bullets_text_outline, (bullets_x + 2, bullets_y + 2))
+    # main_scene.blit(bullets_text, (bullets_x, bullets_y))
 
-    main_scene.blit(shields_text_outline, (shields_x - 2, shields_y - 2))
-    main_scene.blit(shields_text_outline, (shields_x - 2, shields_y))
-    main_scene.blit(shields_text_outline, (shields_x, shields_y - 2))
-    main_scene.blit(shields_text_outline, (shields_x, shields_y + 2))
-    main_scene.blit(shields_text_outline, (shields_x + 2, shields_y))
-    main_scene.blit(shields_text_outline, (shields_x + 2, shields_y + 2))
-    main_scene.blit(shields_text, (shields_x, shields_y))
+    # main_scene.blit(shields_text_outline, (shields_x - 2, shields_y - 2))
+    # main_scene.blit(shields_text_outline, (shields_x - 2, shields_y))
+    # main_scene.blit(shields_text_outline, (shields_x, shields_y - 2))
+    # main_scene.blit(shields_text_outline, (shields_x, shields_y + 2))e
+    # main_scene.blit(shields_text_outline, (shields_x + 2, shields_y))
+    # main_scene.blit(shields_text_outline, (shields_x + 2, shields_y + 2))
+    # main_scene.blit(shields_text, (shields_x, shields_y))
+    global bullets, shields
+    stats_y = int(display_height * .85)
+    bullet_x1 = int(display_width * .05)
+    bullet_x2 = int(display_width * .1)
+    shields_x1 = int(display_width * .83)
+    shields_x2 = int(display_width * .9)
+    
+    main_scene.blit(bullet_icon_outline, (bullet_x1, stats_y))
+    main_scene.blit(bullet_icon_outline, (bullet_x2, stats_y))
+    if bullets >= 1:
+        main_scene.blit(bullet_icon, (bullet_x1, stats_y))
+    if bullets == 2:
+        main_scene.blit(bullet_icon, (bullet_x2, stats_y))
+    
+    if shields >= 1:
+        main_scene.blit(shield_icon, (shields_x1, stats_y))
+    if shields == 2:
+        main_scene.blit(shield_icon, (shields_x2, stats_y))
 
 def end_game_display():
     main_scene.blit(wins_text_outline, (wins_x - 2, wins_y - 2))
@@ -333,13 +355,14 @@ def menu_display():
     pygame.display.update()
     
 def countdown_display():
-    main_scene.blit(countdown_text_outline, (countdown_text_x - 2, countdown_text_y - 2))
-    main_scene.blit(countdown_text_outline, (countdown_text_x - 2, countdown_text_y))
-    main_scene.blit(countdown_text_outline, (countdown_text_x, countdown_text_y - 2))
-    main_scene.blit(countdown_text_outline, (countdown_text_x - 2, countdown_text_y + 2))
-    main_scene.blit(countdown_text_outline, (countdown_text_x + 2, countdown_text_y))
-    main_scene.blit(countdown_text_outline, (countdown_text_x + 2, countdown_text_y + 2))
-    main_scene.blit(countdown_text, (countdown_text_x, countdown_text_y))
+    if current_countdown_int > 0:
+        main_scene.blit(countdown_text_outline, (countdown_text_x - 2, countdown_text_y - 2))
+        main_scene.blit(countdown_text_outline, (countdown_text_x - 2, countdown_text_y))
+        main_scene.blit(countdown_text_outline, (countdown_text_x, countdown_text_y - 2))
+        main_scene.blit(countdown_text_outline, (countdown_text_x - 2, countdown_text_y + 2))
+        main_scene.blit(countdown_text_outline, (countdown_text_x + 2, countdown_text_y))
+        main_scene.blit(countdown_text_outline, (countdown_text_x + 2, countdown_text_y + 2))
+        main_scene.blit(countdown_text, (countdown_text_x, countdown_text_y))
 
 def game_results(result):
     global game_state, game_over_state, wins, losses
@@ -502,7 +525,7 @@ while running:
                     gunblock_SFX.play()
                     if bullets > 0:
                         bullets -= 1
-                        update_stats(1)
+                        #update_stats(1)
                     if choices["shield"]:
                         choices["shield"] -= 1
                     else: 
@@ -516,7 +539,7 @@ while running:
                     choices["shoot"] -= 1
                     if shields:
                         shields-= 1
-                        update_stats(0,1)
+                        #update_stats(0,1)
                     else:
                         result = game_results(result_lose)
                 elif computer_move == "shield":
@@ -524,11 +547,11 @@ while running:
                     choices["shield"] -= 1
                     if shields:
                         shields-= 1
-                        update_stats(0,1)
+                        #update_stats(0,1)
                 else:
                     if shields:
                         shields-= 1
-                        update_stats(0,1)
+                        #update_stats(0,1)
                     if choices["shoot"] < 2:
                         choices["shoot"] += 1
             else:
@@ -541,12 +564,12 @@ while running:
                     choices["shield"] -= 1
                     if bullets > 0:
                         bullets -= 1
-                        update_stats(1)
+                        #update_stats(1)
                 else:
                     reload_SFX.play()
                     if bullets < 2:
                         bullets += 1
-                        update_stats(1)
+                        #update_stats(1)
                     if choices["shoot"] < 2:
                         choices["shoot"] += 1
             player_can_make_move = False
