@@ -422,17 +422,24 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                 
                 # Processing result
                 top_gesture = ""
-                print(prev_result)
+                #print(prev_result)
                 if prev_result is not None and len(prev_result.gestures) > 0:
                     top_gesture = prev_result.gestures[0][0].category_name
                     print(f"top_gesture: {top_gesture}")
-                    print(f"type: {type(top_gesture)}")
-                    if top_gesture == "stop":
-                        pygame.event.post(pygame.event.Event(STOP_GEST))
-                        print("Gesturing stop")
-                    elif top_gesture == "shoot":
-                        pygame.event.post(pygame.event.Event(SHOOT_GEST))
-                        print("Gesturing shoot")
+                    #print(f"type: {type(top_gesture)}")
+                    match top_gesture:
+                        case "stop":
+                            pygame.event.post(pygame.event.Event(STOP_GEST))
+                            print("Gesturing stop")
+                        case "shoot":
+                            pygame.event.post(pygame.event.Event(SHOOT_GEST))
+                            print("Gesturing shoot")
+                        case "thumbsdown":
+                            pygame.event.post(pygame.event.Event(THUMBS_DOWN_GEST))
+                            print("Gesturing thumbs down")
+                        case "one":
+                            pygame.event.post(pygame.event.Event(POINT_ONE_GEST))
+                            print("Gesturing point/one")
                 
                 # Text to display hand value
                 cv_font = cv2.FONT_HERSHEY_DUPLEX
@@ -476,14 +483,14 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                     for event in pygame.event.get():
                         # if event.type == pygame.KEYDOWN:
                         #     if event.key == pygame.K_h:
-                        if event.type == STOP_GEST:
+                        if (event.type == STOP_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_h):
                             tutorial_state = True
                             menu_state = False
                             main_scene.fill((0, 0, 0))
                             pygame.display.update()
                             shoot_anim, shield_anim, reload_anim = tutorial.start_tutorial(tutorial_shoot, tutorial_shield, tutorial_reload)
                             #if event.type == pygame.K_t:
-                        if event.type == SHOOT_GEST:
+                        if (event.type == SHOOT_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_t):
                             game_state = True
                             menu_state = False
                             idle_anim = computer.start_cp_anim(idle)
