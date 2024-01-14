@@ -2,6 +2,45 @@ import pygame
 import tutorial
 import computer
 
+import mediapipe as mp
+import cv2
+import numpy as np
+
+# initializing hand recognition stuff in mediapipe
+mp_hands = mp.solutions.hands
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
+
+# initializing video capture w/ opencv
+cap = cv2.VideoCapture(0)
+fps = cap.get(cv2.CAP_PROP_FPS)
+print(f"FPS: {fps}")
+frame_count = 0
+
+# Gesture Recognizer options (what trains the model)
+BaseOptions = mp.tasks.BaseOptions
+GestureRecognizer = mp.tasks.vision.GestureRecognizer
+GestureRecognizerOptions = mp.tasks.vision.GestureRecognizerOptions
+GestureRecognizerResult = mp.tasks.vision.GestureRecognizerResult
+VisionRunningMode = mp.tasks.vision.RunningMode
+
+# saves GestureRecognizer results here
+prev_result = None
+
+# Create a gesture recognizer instance with the live stream mode:
+def save_result(result: GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
+    global prev_result
+    prev_result = result
+
+# recognizer options.
+# model saved in model_asset_path
+# running mode is set to live stream
+# print_result saves the result
+options = GestureRecognizerOptions(
+    base_options=BaseOptions(model_asset_path='models/gesture_recognizer_readd_thumb.task'),
+    running_mode=VisionRunningMode.LIVE_STREAM,
+    result_callback=save_result)   
+
 pygame.init()
 
 # ------------- SPRITES -------------
@@ -77,6 +116,13 @@ wins = 0
 losses = 0
 bullets = 0
 shields = 2
+
+# ------------- GESTURE EVENTS -------------
+POINT_ONE_GEST = pygame.USEREVENT + 1
+STOP_GEST = pygame.USEREVENT + 2
+SHOOT_GEST = pygame.USEREVENT + 3
+THUMBS_DOWN_GEST = pygame.USEREVENT + 4
+
 # ------------- TEXT PLACEMENT -------------
 # Tutorial
 font = pygame.font.Font(None, 36)
