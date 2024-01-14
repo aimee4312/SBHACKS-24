@@ -149,6 +149,21 @@ idle_anim_percentage_y = 0.1
 idle_anim_x = int(display_width * idle_anim_percentage_x)
 idle_anim_y = int(display_height * idle_anim_percentage_y)
 
+cp_shoot_percentage_x = 0.3
+cp_shoot_percentage_y = 0.1 
+cp_shoot_x = int(display_width * cp_shoot_percentage_x)
+cp_shoot_y = int(display_height * cp_shoot_percentage_y)
+
+cp_shield_percentage_x = 0.3
+cp_shield_percentage_y = 0.1 
+cp_shield_x = int(display_width * cp_shield_percentage_x)
+cp_shield_y = int(display_height * cp_shield_percentage_y)
+
+cp_reload_percentage_x = 0.3
+cp_reload_percentage_y = 0.1 
+cp_reload_x = int(display_width * cp_reload_percentage_x)
+cp_reload_y = int(display_height * cp_reload_percentage_y)
+
 # MENU
 menu_font = pygame.font.Font('freesansbold.ttf', 84)
 menu_text = menu_font.render("Welcome to ShootOut", True, (222, 169, 169))
@@ -185,7 +200,7 @@ losses_text_outline = score_font.render("Losses: " + str(wins), True, (0, 0, 0))
 losses_x = 850
 losses_y = 20
 
-choices = {"shield": 2, "shoot": 0}
+choices = {"shield": 2, "shoot": 2}
 
 def end_game_display():
     main_scene.blit(wins_text_outline, (wins_x - 2, wins_y - 2))
@@ -257,6 +272,8 @@ while running:
                     game_state = True
                     menu_state = False
                     idle_anim = computer.start_idle_display(idle)
+                    cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
+                    
                     main_scene.blit(background, (0, 0))
             if event.type == pygame.QUIT:
                 running = False
@@ -317,12 +334,36 @@ while running:
                     game_state = True
                     tutorial_state = False
                     idle_anim = computer.start_idle_display(idle)
+                    cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
                     main_scene.blit(background, (0, 0))
             if event.type == pygame.QUIT:
                 running = False
 
     if game_state:
-        computer.update_idle(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
+        delay_duration = 3000
+        start_time = pygame.time.get_ticks()
+        clock = pygame.time.Clock()
+
         main_scene.blit(background, (0, 0))
-        if event.type == pygame.QUIT:
-            running = False
+
+        while pygame.time.get_ticks() - start_time < delay_duration:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+            clock.tick(60)
+
+        computer_choice = computer.computer_choice(choices)
+
+        if computer_choice == "shoot":
+            computer.update_idle(cp_shoot, clock, main_scene, cp_shoot_x, cp_shoot_y)
+        elif computer_choice == "shield":
+            computer.update_idle(cp_shield, clock, main_scene, cp_shield_x, cp_shield_y)
+        elif computer_choice == "reload":
+            computer.update_idle(cp_reload, clock, main_scene, cp_reload_x, cp_reload_y)
+        else:
+            computer.update_idle(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
