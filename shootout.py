@@ -7,28 +7,28 @@ import os
 pygame.init()
 
 # ------------- SPRITES -------------
-shoot_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png"),
-                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot2.png"),
-                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot3.png"),
-                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png")]
-reload_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png"),
-                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload2.png"),
-                pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png")]
-shield_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shield.png")]
+# shoot_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png"),
+#                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot2.png"),
+#                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot3.png"),
+#                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shoot1.png")]
+# reload_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png"),
+#                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload2.png"),
+#                 pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/reload1.png")]
+# shield_sprite = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/shield.png")]
 
-tutorial_shoot = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png"),
-              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s2.png"),
-              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s3.png"),
-              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png")]
-tutorial_shield = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_sh.png")]
-tutorial_reload = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png"),
-              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r2.png"),
-              pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png")]
-icon = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/icon.png")
-idle = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle1.PNG"),
-        pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle2.png")]
+# tutorial_shoot = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png"),
+#               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s2.png"),
+#               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s3.png"),
+#               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_s1.png")]
+# tutorial_shield = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_sh.png")]
+# tutorial_reload = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png"),
+#               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r2.png"),
+#               pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/tutorial/tutorial_r1.png")]
+# icon = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/icon.png")
+# idle = [pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle1.PNG"),
+#         pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/sprites/computer/idle2.png")]
 
-""" shoot_sprite = [pygame.image.load("sprites/computer/shoot1.png"),
+shoot_sprite = [pygame.image.load("sprites/computer/shoot1.png"),
                 pygame.image.load("sprites/computer/shoot2.png"),
                 pygame.image.load("sprites/computer/shoot3.png"),
                 pygame.image.load("sprites/computer/shoot1.png")]
@@ -44,8 +44,10 @@ tutorial_shoot = [pygame.image.load("sprites/tutorial/tutorial_s1.png"),
 tutorial_shield = [pygame.image.load("sprites/tutorial/tutorial_sh.png")]
 tutorial_reload = [pygame.image.load("sprites/tutorial/tutorial_r1.png"),
               pygame.image.load("sprites/tutorial/tutorial_r2.png"),
-              pygame.image.load("sprites/tutorial/tutorial_r1.png")] """
-
+              pygame.image.load("sprites/tutorial/tutorial_r1.png")]
+icon = pygame.image.load("sprites/icon.png")
+idle = [pygame.image.load("sprites/computer/idle1.PNG"),
+        pygame.image.load("sprites/computer/idle2.png")]
 # ------------- SCENE MANAGEMENT-------------
 main_scene_info = pygame.display.Info()
 display_width = main_scene_info.current_w
@@ -54,8 +56,8 @@ display_height = main_scene_info.current_h
 main_scene_WIDTH = display_width
 main_scene_HEIGHT = display_height
 main_scene = pygame.display.set_mode((main_scene_WIDTH, main_scene_HEIGHT))
-background = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/background/background.jpeg")
-#background = pygame.image.load("assets/background/background.jpeg")
+# background = pygame.image.load("/Users/aimeemai/Documents/GitHub/SBHACKS-24/assets/background/background.jpeg")
+background = pygame.image.load("assets/background/background.jpeg")
 pygame.display.set_caption("ShootOut", "ShootOut")
 background = pygame.transform.scale(background, (main_scene_WIDTH, main_scene_HEIGHT))
 pygame.display.set_icon(icon)
@@ -69,6 +71,7 @@ menu_state = True
 tutorial_state = False
 game_state = False
 game_over_state = False
+player_can_make_move = False
 wins = 0
 losses = 0
 # ------------- TEXT PLACEMENT -------------
@@ -201,10 +204,12 @@ losses_x = 850
 losses_y = 20
 
 # COUNTDOWN
+countdown_time = 1000
+current_countdown_int = 4
 countdown_font = pygame.font.Font('freesansbold.ttf', 72)
 countdown_text = countdown_font.render(str(current_countdown_int), True, (222, 169, 169))
 countdown_text_outline = countdown_font.render(str(current_countdown_int), True, (0, 0, 0))
-countdown_text_percentage_x = .4
+countdown_text_percentage_x = .5
 countdown_text_percentage_y = .15
 countdown_text_x = int(display_width * countdown_text_percentage_x)
 countdown_text_y = int(display_height * countdown_text_percentage_y)
@@ -359,18 +364,18 @@ while running:
                 running = False
 
     if game_state:
-        computer.update_idle(idle_anim)
+        computer.update_idle(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
         main_scene.blit(background, (0, 0))
         countdown_display()
         player_move = None
         
         # COUNTDOWN
-        countdown_time = 1000
-        current_countdown_int = 3
         if not player_can_make_move:
             countdown_time -= clock.get_time()           
             if countdown_time <= 0:
                 current_countdown_int-= 1
+                countdown_text = countdown_font.render(str(current_countdown_int), True, (222, 169, 169))
+                countdown_text_outline = countdown_font.render(str(current_countdown_int), True, (0, 0, 0))
                 countdown_time = 1000           
             if current_countdown_int <= 0:
                 player_can_make_move = True
@@ -391,12 +396,13 @@ while running:
         
         # game logic         
         if player_move:
-            computer_move = computer.computer_choice()
-            if player_move.equals("shoot") and computer_move.equals("reload"):
+            computer_move = computer.computer_choice(choices)
+            if player_move == "shoot" and computer_move == "reload":
                 wins += 1
                 game_state = False
                 game_over_state = True
 
             player_can_make_move = False
+            current_countdown_int = 4
             
         pygame.display.update()
