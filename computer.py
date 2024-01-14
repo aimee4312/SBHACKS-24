@@ -19,20 +19,18 @@ def computer_choice(choices):
     
     return selected_choice
 
-def computer_choice_anim(choice):
-    if choice == "shoot":
-        pass
-    elif choice == "shield":
-        pass
-    else:
-        pass
+def cp_move(cp_move, clock, main_scene, cp_x, cp_y, background, cp_anim):
+    for frame in cp_move:
+        main_scene.blit(background, (0, 0))
+        update_cp_anim(cp_anim, clock, main_scene, cp_x, cp_y)
+        pygame.time.delay(300)
 
-def update_idle(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y):
-    idle_anim.update(clock.tick(60) / 1000.0)
-    main_scene.blit(idle_anim.current_frame, (idle_anim_x, idle_anim_y))
+def update_cp_anim(cp_anim, clock, main_scene, cp_anim_x, cp_anim_y):
+    cp_anim.update(clock.tick(60) / 1000.0)
+    main_scene.blit(cp_anim.current_frame, (cp_anim_x, cp_anim_y))
     pygame.display.update()
 
-def start_idle_display(idle):
-    idle_anim = tutorial.tutorial_animations(idle)
-    idle_anim.start(3)
-    return idle_anim
+def start_cp_anim(idle):
+    cp_anim = tutorial.tutorial_animations(idle)
+    cp_anim.start(3)
+    return cp_anim

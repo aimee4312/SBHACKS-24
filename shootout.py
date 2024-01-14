@@ -64,7 +64,7 @@ pygame.display.set_icon(icon)
 main_scene.blit(background, (0, 0))
 clock = pygame.time.Clock()
 
-# ------------- STATES -------------
+# ------------- STATES & VARIABLES-------------
 running = True
 tutorial_state = False
 menu_state = True
@@ -72,8 +72,13 @@ tutorial_state = False
 game_state = False
 game_over_state = False
 player_can_make_move = False
+result_win = 1
+result_lose = 2
+result_tie = 3
 wins = 0
 losses = 0
+bullets = 0
+shields = 0
 # ------------- TEXT PLACEMENT -------------
 # Tutorial
 font = pygame.font.Font(None, 36)
@@ -268,7 +273,17 @@ def countdown_display():
     main_scene.blit(countdown_text_outline, (countdown_text_x + 2, countdown_text_y))
     main_scene.blit(countdown_text_outline, (countdown_text_x + 2, countdown_text_y + 2))
     main_scene.blit(countdown_text, (countdown_text_x, countdown_text_y))
-    pygame.display.update()
+
+def game_results(result):
+    global game_state, game_over_state
+    game_state = False
+    game_over_state = True
+    if result == result_win:
+        win += 1
+    elif result == result_lose:
+        lose += 1
+    return result
+
 
 while running:
     for event in pygame.event.get():
@@ -295,7 +310,7 @@ while running:
                 if event.key == pygame.K_t:
                     game_state = True
                     menu_state = False
-                    idle_anim = computer.start_idle_display(idle)
+                    idle_anim = computer.start_cp_anim(idle)
                     cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
                     
                     main_scene.blit(background, (0, 0))
@@ -357,16 +372,16 @@ while running:
                 if event.key == pygame.K_t:
                     game_state = True
                     tutorial_state = False
-                    idle_anim = computer.start_idle_display(idle)
+                    idle_anim = computer.start_cp_anim(idle)
                     cp_shoot, cp_shield, cp_reload = tutorial.start_tutorial(shoot_sprite, shield_sprite, reload_sprite)
                     main_scene.blit(background, (0, 0))
             if event.type == pygame.QUIT:
                 running = False
 
     if game_state:
-        computer.update_idle(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
         main_scene.blit(background, (0, 0))
         countdown_display()
+        computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
         player_move = None
         
         # COUNTDOWN
@@ -389,20 +404,48 @@ while running:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         player_move = "shoot"
-                    if event.key == pygame.K_w:
+                    elif event.key == pygame.K_w:
                         player_move = "reload"
-                    if event.key == pygame.K_e:
+                    elif event.key == pygame.K_e:
                         player_move = "shield"
         
-        # game logic         
+         # game logic         
         if player_move:
             computer_move = computer.computer_choice(choices)
-            if player_move == "shoot" and computer_move == "reload":
-                wins += 1
-                game_state = False
-                game_over_state = True
+            if computer_move == "shoot":
+                computer.cp_move(shoot_sprite, clock, main_scene, cp_shoot_x, cp_shoot_y, background, cp_shoot)
+            elif computer_move == "shield":
+                computer.cp_move(shield_sprite, clock, main_scene, cp_shield_x, cp_shield_y, background, cp_shield)
+                pygame.display.update()
+            elif computer_move == "reload":
+                computer.cp_move(reload_sprite, clock, main_scene, cp_reload_x, cp_reload_y, background, cp_reload)
+            else:
+                computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
+                pygame.display.update()
+                pygame.time.delay(300)
+"""
+            if player_move == "shoot":
+                if computer_move == "shoot":
+                    result = game_results(result_tie)
+                elif computer_move == "shield":
+                    if bullets > 0:
+                        bullets -= 1
+                    if choices["shield"]:
+                        choices["shield"] -= 1
+                    else: 
+                        result = game_results(result_win)
+                else:
+                    if bullets > 0:
+                        result = game_results(result_win)
+            elif player_move == "shield":
+                if computer_move == "shoot":
+                    choices["shoot"] -= 1
+                    shields-= 1
+                    if choices["shield"]:
+                        choices["shield"] -= 1
+            else:
+                pass
 
             player_can_make_move = False
-            current_countdown_int = 4
+            current_countdown_int = 4 """
             
-        pygame.display.update()
