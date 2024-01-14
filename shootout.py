@@ -78,7 +78,7 @@ result_tie = 3
 wins = 0
 losses = 0
 bullets = 0
-shields = 0
+shields = 2
 # ------------- TEXT PLACEMENT -------------
 # Tutorial
 font = pygame.font.Font(None, 36)
@@ -208,6 +208,17 @@ losses_text_outline = score_font.render("Losses: " + str(wins), True, (0, 0, 0))
 losses_x = 850
 losses_y = 20
 
+bullets_text = score_font.render("Bullets: " + str(bullets), True, (255, 255, 255))
+bullets_text_outline = score_font.render("Bullets: " + str(bullets), True, (0, 0, 0))
+bullets_x = 20
+bullets_y = 20
+shields_text = score_font.render("Shields: " + str(shields), True, (255, 255, 255))
+shields_text_outline = score_font.render("Shields: " + str(shields), True, (0, 0, 0))
+shields_x = 850
+shields_y = 20
+
+
+
 # COUNTDOWN
 countdown_time = 1000
 current_countdown_int = 4
@@ -219,7 +230,50 @@ countdown_text_percentage_y = .15
 countdown_text_x = int(display_width * countdown_text_percentage_x)
 countdown_text_y = int(display_height * countdown_text_percentage_y)
 
-choices = {"shield": 2, "shoot": 2}
+choices = {"shield": 2, "shoot": 0}
+
+def update_results():
+    global wins_text, wins_text_outline, wins_x, wins_y, losses_text, losses_text_outline, losses_x, losses_y
+    wins_text = score_font.render("Wins: " + str(wins), True, (255, 255, 255))
+    wins_text_outline = score_font.render("Wins: " + str(wins), True, (0, 0, 0))
+    wins_x = 20
+    wins_y = 20
+    losses_text = score_font.render("Losses: " + str(wins), True, (255, 255, 255))
+    losses_text_outline = score_font.render("Losses: " + str(wins), True, (0, 0, 0))
+    losses_x = 850
+    losses_y = 20
+
+def update_stats(bullet = 0, shield = 0):
+    global bullets_text, bullets_text_outline, bullets_x, bullets_y, shields_text, shields_text_outline, shields_x, shields_y
+    if bullet:
+        bullets_text = score_font.render("Bullets: " + str(bullets), True, (255, 255, 255))
+        bullets_text_outline = score_font.render("Bullets: " + str(bullets), True, (0, 0, 0))
+        bullets_x = 20
+        bullets_y = 20
+    if shield:
+        shields_text = score_font.render("Shields: " + str(shields), True, (255, 255, 255))
+        shields_text_outline = score_font.render("Shields: " + str(shields), True, (0, 0, 0))
+        shields_x = 850
+        shields_y = 20
+    stats_display()
+
+
+def stats_display():
+    main_scene.blit(bullets_text_outline, (bullets_x - 2, bullets_y - 2))
+    main_scene.blit(bullets_text_outline, (bullets_x - 2, bullets_y))
+    main_scene.blit(bullets_text_outline, (bullets_x, bullets_y - 2))
+    main_scene.blit(bullets_text_outline, (bullets_x, bullets_y + 2))
+    main_scene.blit(bullets_text_outline, (bullets_x + 2, bullets_y))
+    main_scene.blit(bullets_text_outline, (bullets_x + 2, bullets_y + 2))
+    main_scene.blit(bullets_text, (bullets_x, bullets_y))
+
+    main_scene.blit(shields_text_outline, (shields_x - 2, shields_y - 2))
+    main_scene.blit(shields_text_outline, (shields_x - 2, shields_y))
+    main_scene.blit(shields_text_outline, (shields_x, shields_y - 2))
+    main_scene.blit(shields_text_outline, (shields_x, shields_y + 2))
+    main_scene.blit(shields_text_outline, (shields_x + 2, shields_y))
+    main_scene.blit(shields_text_outline, (shields_x + 2, shields_y + 2))
+    main_scene.blit(shields_text, (shields_x, shields_y))
 
 def end_game_display():
     main_scene.blit(wins_text_outline, (wins_x - 2, wins_y - 2))
@@ -275,13 +329,15 @@ def countdown_display():
     main_scene.blit(countdown_text, (countdown_text_x, countdown_text_y))
 
 def game_results(result):
-    global game_state, game_over_state
+    global game_state, game_over_state, wins, losses
     game_state = False
     game_over_state = True
     if result == result_win:
-        win += 1
+        wins += 1
     elif result == result_lose:
-        lose += 1
+        losses += 1
+    update_results()
+    end_game_display()
     return result
 
 
@@ -381,10 +437,10 @@ while running:
     if game_state:
         main_scene.blit(background, (0, 0))
         countdown_display()
+        stats_display()
         computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
         player_move = None
         
-        # COUNTDOWN
         if not player_can_make_move:
             countdown_time -= clock.get_time()           
             if countdown_time <= 0:
@@ -399,8 +455,6 @@ while running:
             if event.type == pygame.QUIT:
                 running = False
             if player_can_make_move:
-                # set player action to whatever gesture is detected
-                # placeholder controls!!!
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         player_move = "shoot"
@@ -409,7 +463,6 @@ while running:
                     elif event.key == pygame.K_e:
                         player_move = "shield"
         
-         # game logic         
         if player_move:
             computer_move = computer.computer_choice(choices)
             if computer_move == "shoot":
@@ -423,13 +476,14 @@ while running:
                 computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
                 pygame.display.update()
                 pygame.time.delay(300)
-"""
+
             if player_move == "shoot":
                 if computer_move == "shoot":
                     result = game_results(result_tie)
                 elif computer_move == "shield":
                     if bullets > 0:
                         bullets -= 1
+                        update_stats(1)
                     if choices["shield"]:
                         choices["shield"] -= 1
                     else: 
@@ -440,12 +494,36 @@ while running:
             elif player_move == "shield":
                 if computer_move == "shoot":
                     choices["shoot"] -= 1
-                    shields-= 1
-                    if choices["shield"]:
-                        choices["shield"] -= 1
+                    if shields:
+                        shields-= 1
+                        update_stats(0,1)
+                    else:
+                        result = game_results(result_lose)
+                elif computer_move == "shield":
+                    choices["shield"] -= 1
+                    if shields:
+                        shields-= 1
+                        update_stats(0,1)
+                else:
+                    if shields:
+                        shields-= 1
+                        update_stats(0,1)
+                    if choices["shoot"] < 2:
+                        choices["shoot"] += 1
             else:
-                pass
-
+                if computer_move == "shoot":
+                    result = game_results(result_lose)
+                elif computer_move == "shield":
+                    choices["shield"] -= 1
+                    if bullets > 0:
+                        bullets -= 1
+                        update_stats(1)
+                else:
+                    if bullets < 2:
+                        bullets += 1
+                        update_stats(1)
+                    if choices["shoot"] < 2:
+                        choices["shoot"] += 1
             player_can_make_move = False
-            current_countdown_int = 4 """
+            current_countdown_int = 4
             
