@@ -65,10 +65,10 @@ clock = pygame.time.Clock()
 # ------------- STATES & VARIABLES-------------
 running = True
 tutorial_state = False
-menu_state = True
+menu_state = False
 tutorial_state = False
 game_state = False
-game_over_state = False
+game_over_state = True
 player_can_make_move = False
 result_win = 1
 result_lose = 2
@@ -226,6 +226,32 @@ countdown_text_percentage_y = .15
 countdown_text_x = int(display_width * countdown_text_percentage_x)
 countdown_text_y = int(display_height * countdown_text_percentage_y)
 
+# END SCREEN
+game_over_font = pygame.font.Font('freesansbold.ttf', 84)
+winner_text = game_over_font.render("You Win!", True, (222, 169, 169))
+winner_text_outline = game_over_font.render("You Win!", True, (0, 0, 0))
+draw_text = game_over_font.render("It's a Draw", True, (222, 169, 169))
+draw_text_outline = game_over_font.render("It's a Draw", True, (0, 0, 0))
+loser_text = game_over_font.render("You Lose!", True, (222, 169, 169))
+loser_text_outline = game_over_font.render("You Lose!", True, (0, 0, 0))
+game_over_text_percentage_x = 0.2
+game_over_text_percentage_y = 0.3 
+game_over_text_x = int(display_width * game_over_text_percentage_x)
+game_over_text_y = int(display_height * game_over_text_percentage_y)
+
+# END SCREEN
+game_over_font = pygame.font.Font('freesansbold.ttf', 84)
+winner_text = game_over_font.render("You Win!", True, (222, 169, 169))
+winner_text_outline = game_over_font.render("You Win!", True, (0, 0, 0))
+draw_text = game_over_font.render("It's a Draw", True, (222, 169, 169))
+draw_text_outline = game_over_font.render("It's a Draw", True, (0, 0, 0))
+loser_text = game_over_font.render("You Lose!", True, (222, 169, 169))
+loser_text_outline = game_over_font.render("You Lose!", True, (0, 0, 0))
+game_over_text_percentage_x = 0.2
+game_over_text_percentage_y = 0.3 
+game_over_text_x = int(display_width * game_over_text_percentage_x)
+game_over_text_y = int(display_height * game_over_text_percentage_y)
+
 choices = {"shield": 2, "shoot": 0}
 
 def update_results():
@@ -270,7 +296,7 @@ def stats_display():
     main_scene.blit(shields_text_outline, (shields_x + 2, shields_y + 2))
     main_scene.blit(shields_text, (shields_x, shields_y))
 
-def end_game_display():
+def end_game_display(result):
     main_scene.blit(wins_text_outline, (wins_x - 2, wins_y - 2))
     main_scene.blit(wins_text_outline, (wins_x - 2, wins_y))
     main_scene.blit(wins_text_outline, (wins_x, wins_y - 2))
@@ -286,6 +312,22 @@ def end_game_display():
     main_scene.blit(losses_text_outline, (losses_x + 2, losses_y))
     main_scene.blit(losses_text_outline, (losses_x + 2, losses_y + 2))
     main_scene.blit(losses_text, (losses_x, losses_y))
+
+    if result == 0:
+        x, y = winner_text, winner_text_outline
+    elif result == 1:
+        x, y = draw_text, draw_text_outline
+    else:
+        x, y = loser_text, loser_text_outline
+    
+    main_scene.blit(y, (game_over_text_x - 2, game_over_text_y - 2))
+    main_scene.blit(y, (game_over_text_x - 2, game_over_text_y))
+    main_scene.blit(y, (game_over_text_x, game_over_text_y - 2))
+    main_scene.blit(y, (game_over_text_x, game_over_text_y + 2))
+    main_scene.blit(y, (game_over_text_x + 2, game_over_text_y))
+    main_scene.blit(y, (game_over_text_x + 2, game_over_text_y + 2))
+    main_scene.blit(x, (game_over_text_x, game_over_text_y))
+
     pygame.display.update()
 
 def menu_display():
@@ -454,7 +496,9 @@ while running:
                     if event.key == pygame.K_q:
                         player_move = "shoot"
                     elif event.key == pygame.K_w:
+                    elif event.key == pygame.K_w:
                         player_move = "reload"
+                    elif event.key == pygame.K_e:
                     elif event.key == pygame.K_e:
                         player_move = "shield"
         
@@ -522,3 +566,6 @@ while running:
             player_can_make_move = False
             current_countdown_int = 4
             
+    if game_over_state:
+        end_game_display(result)
+        
