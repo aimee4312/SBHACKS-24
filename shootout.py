@@ -583,13 +583,12 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                         if event.type == pygame.QUIT:
                             running = False
                         if player_can_make_move:
-                            if event.type == pygame.KEYDOWN:
-                                if event.key == pygame.K_q:
-                                    player_move = "shoot"
-                                elif event.key == pygame.K_w:
-                                    player_move = "reload"
-                                elif event.key == pygame.K_e:
-                                    player_move = "shield"
+                            if (event.type == SHOOT_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
+                                player_move = "shoot"
+                            elif (event.type == POINT_ONE_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_w):
+                                player_move = "reload"
+                            elif (event.type == STOP_GEST) or (event.type == pygame.KEYDOWN and event.key == pygame.K_e):
+                                player_move = "shield"
                     
                     if player_move:
                         computer_move = computer.computer_choice(choices)
