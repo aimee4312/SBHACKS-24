@@ -113,6 +113,7 @@ death_SFX = pygame.mixer.Sound("assets/sfx/death.mp3")
 gunblock_SFX = pygame.mixer.Sound("assets/sfx/gunblock.mp3")
 shield_SFX = pygame.mixer.Sound("assets/sfx/shield_questionmark.mp3")
 reload_SFX = pygame.mixer.Sound("assets/sfx/reload.mp3")
+empty_SFX = pygame.mixer.Sound("assets/sfx/emptygun.mp3")
 
 instruction_lines = [
     "Shoot: Attempt to shoot the opponent",
@@ -546,14 +547,11 @@ while running:
         if player_move:
             computer_move = computer.computer_choice(choices, bullets, shields)
             if computer_move == "shoot":
-                gunshot_SFX.play()
                 computer.cp_move(shoot_sprite, clock, main_scene, cp_shoot_x, cp_shoot_y, background, cp_shoot)
             elif computer_move == "shield":
-                shield_SFX.play()
                 computer.cp_move(shield_sprite, clock, main_scene, cp_shield_x, cp_shield_y, background, cp_shield)
                 pygame.display.update()
             elif computer_move == "reload":
-                reload_SFX.play()
                 computer.cp_move(reload_sprite, clock, main_scene, cp_reload_x, cp_reload_y, background, cp_reload)
             else:
                 computer.update_cp_anim(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
@@ -561,42 +559,60 @@ while running:
                 pygame.time.delay(300)
 
             if player_move == "shoot" and bullets > 0:
-                if computer_move == "shoot": 
+                if computer_move == "shoot":
+                    gunshot_SFX.play()
+                    gunshot_SFX.play()
                     game_results(result_tie)
                     recent_result = result_tie
                     game_over_state = True
                     game_state = False
                 elif computer_move == "shield":
+                    shield_SFX.play()
                     gunblock_SFX.play()
                     bullets -= 1
                     choices["shield"] -= 1
                 else:
+                    gunshot_SFX.play()
+                    reload_SFX.play()
                     game_results(result_win)
                     recent_result = result_win
                     game_over_state = True
                     game_state = False
             elif player_move == "shoot" and bullets == 0:
                 if computer_move == "shoot":
+                    empty_SFX.play()
+                    gunshot_SFX.play()
                     game_results(result_lose)
                     recent_result = result_lose
+                    death_SFX.play()
                     game_over_state = True
                     game_state = False
                 elif computer_move == "shield":
+                    empty_SFX.play()
+                    shield_SFX.play()
                     choices["shield"] -= 1
                 else:
+                    empty_SFX.play()
+                    reload_SFX.play()
                     if choices["shoot"] < 2:
                         choices["shoot"] += 1
             elif player_move == "shield" and shields > 0:
+                shield_SFX.play()
                 shields -= 1
                 if computer_move == "shoot":
+                    gunblock_SFX.play()
                     choices["shoot"] -= 1
                 elif computer_move == "shield":
+                    shield_SFX.play()
                     choices["shield"] -= 1
                 else:
+                    reload_SFX.play()
                     if choices["shoot"] < 2:
                         choices["shoot"] += 1
             elif player_move == "shield" and shields == 0:
                 if computer_move == "shoot":
+                    gunshot_SFX.play()
+                    death_SFX.play()
                     game_results(result_lose)
                     recent_result = result_lose
                     game_over_state = True
@@ -605,10 +621,13 @@ while running:
                     shield_SFX.play()
                     choices["shield"] -= 1
                 else:
+                    reload_SFX.play()
                     if choices["shoot"] < 2:
                         choices["shoot"] += 1
             else:
                 if computer_move == "shoot":
+                    reload_SFX.play()
+                    gunshot_SFX.play()
                     death_SFX.play()
                     game_results(result_lose)
                     recent_result = result_lose
@@ -638,5 +657,6 @@ while running:
                 if event.key == pygame.K_a:
                     bullets = 0
                     shields = 2
+                    choices = {"shield": 2, "shoot": 0}
                     game_state = True
                     game_over_state = False
