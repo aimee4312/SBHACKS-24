@@ -524,7 +524,7 @@ while running:
                         player_move = "shield"
         
         if player_move:
-            computer_move = computer.computer_choice(choices, bullets)
+            computer_move = computer.computer_choice(choices, bullets, shields)
             if computer_move == "shoot":
                 gunshot_SFX.play()
                 computer.cp_move(shoot_sprite, clock, main_scene, cp_shoot_x, cp_shoot_y, background, cp_shoot)
