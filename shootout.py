@@ -396,6 +396,7 @@ with GestureRecognizer.create_from_options(options) as recognizer:
         min_tracking_confidence=0.5) as hands:
             while running and cap.isOpened():
                 success, img = cap.read()
+                img = cv2.resize(img, (360, 270))
                 frame_count += 1
                 image = img.copy()
                 if not success:
@@ -410,10 +411,24 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                 image.flags.writeable = True
                 # changing color output?
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                
+                # # creating image in pygame to draw hands onto
+                # screen = pygame.display.get_surface()
+
+                # capture = pygame.surfarray.pixels3d(screen)
+                # capture = capture.transpose([1, 0, 2])
+                # capture_bgr = cv2.cvtColor(capture, cv2.COLOR_RGB2BGR)
+                
+                hand_img = np.empty(image.shape)
+                hand_img.fill(255)
+                
+                # collection of detected hands
                 if results.multi_hand_landmarks:
+                    # for each hand, draw the landmarks
                     for hand_landmarks in results.multi_hand_landmarks:
                         mp_drawing.draw_landmarks(
                             image,
+                            #hand_img,
                             hand_landmarks,
                             mp_hands.HAND_CONNECTIONS,
                             mp_drawing_styles.get_default_hand_landmarks_style(),
@@ -442,20 +457,31 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                             print("Gesturing point/one")
                 
                 # Text to display hand value
-                cv_font = cv2.FONT_HERSHEY_DUPLEX
-                cv2.putText(image,  
-                    str(top_gesture),  
-                    (50, 50),
-                    cv_font, 1,  
-                    (0, 255, 255),  
-                    2,  
-                    cv2.LINE_4) 
+                # cv_font = cv2.FONT_HERSHEY_DUPLEX
+                # cv2.putText(image,  
+                #     str(top_gesture),  
+                #     (50, 50),
+                #     cv_font, 1,  
+                #     (0, 255, 255),  
+                #     2,  
+                #     cv2.LINE_4)
+                
+                
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                image = np.rot90(image)
+                image = pygame.surfarray.make_surface(image)
+                main_scene.blit(image, (600,600))
+                #pygame.display.update()
+                # TODO: fix video display
+
                         
                 # Displays video
-                cv2.imshow("MediaPipe Hands", cv2.flip(image, 1))
+                #cv2.imshow("MediaPipe Hands", cv2.flip(image, 1))
+                #cv2.imshow("MediaPipe Hands", cv2.flip(hand_img, 1))
                             
                 # recognition stuff
                 mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=img)
+                     
                 
                 # timestamp is in milliseconds
                 timestamp = frame_count * 1000/fps
