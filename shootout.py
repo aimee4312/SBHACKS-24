@@ -200,6 +200,15 @@ losses_text_outline = score_font.render("Losses: " + str(wins), True, (0, 0, 0))
 losses_x = 850
 losses_y = 20
 
+# COUNTDOWN
+countdown_font = pygame.font.Font('freesansbold.ttf', 72)
+countdown_text = countdown_font.render(str(current_countdown_int), True, (222, 169, 169))
+countdown_text_outline = countdown_font.render(str(current_countdown_int), True, (0, 0, 0))
+countdown_text_percentage_x = .4
+countdown_text_percentage_y = .15
+countdown_text_x = int(display_width * countdown_text_percentage_x)
+countdown_text_y = int(display_height * countdown_text_percentage_y)
+
 choices = {"shield": 2, "shoot": 2}
 
 def end_game_display():
@@ -244,6 +253,16 @@ def menu_display():
     main_scene.blit(start_text_outline, (start_text_x + 2, start_text_y))
     main_scene.blit(start_text_outline, (start_text_x + 2, start_text_y + 2))
     main_scene.blit(start_text, (start_text_x, start_text_y))
+    pygame.display.update()
+    
+def countdown_display():
+    main_scene.blit(countdown_text_outline, (countdown_text_x - 2, countdown_text_y - 2))
+    main_scene.blit(countdown_text_outline, (countdown_text_x - 2, countdown_text_y))
+    main_scene.blit(countdown_text_outline, (countdown_text_x, countdown_text_y - 2))
+    main_scene.blit(countdown_text_outline, (countdown_text_x - 2, countdown_text_y + 2))
+    main_scene.blit(countdown_text_outline, (countdown_text_x + 2, countdown_text_y))
+    main_scene.blit(countdown_text_outline, (countdown_text_x + 2, countdown_text_y + 2))
+    main_scene.blit(countdown_text, (countdown_text_x, countdown_text_y))
     pygame.display.update()
 
 while running:
@@ -340,30 +359,44 @@ while running:
                 running = False
 
     if game_state:
-        delay_duration = 3000
-        start_time = pygame.time.get_ticks()
-        clock = pygame.time.Clock()
-
+        computer.update_idle(idle_anim)
         main_scene.blit(background, (0, 0))
-
-        while pygame.time.get_ticks() - start_time < delay_duration:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-            clock.tick(60)
-
-        computer_choice = computer.computer_choice(choices)
-
-        if computer_choice == "shoot":
-            computer.update_idle(cp_shoot, clock, main_scene, cp_shoot_x, cp_shoot_y)
-        elif computer_choice == "shield":
-            computer.update_idle(cp_shield, clock, main_scene, cp_shield_x, cp_shield_y)
-        elif computer_choice == "reload":
-            computer.update_idle(cp_reload, clock, main_scene, cp_reload_x, cp_reload_y)
-        else:
-            computer.update_idle(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
-
+        countdown_display()
+        player_move = None
+        
+        # COUNTDOWN
+        countdown_time = 1000
+        current_countdown_int = 3
+        if not player_can_make_move:
+            countdown_time -= clock.get_time()           
+            if countdown_time <= 0:
+                current_countdown_int-= 1
+                countdown_time = 1000           
+            if current_countdown_int <= 0:
+                player_can_make_move = True
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if player_can_make_move:
+                # set player action to whatever gesture is detected
+                # placeholder controls!!!
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        player_move = "shoot"
+                    if event.key == pygame.K_w:
+                        player_move = "reload"
+                    if event.key == pygame.K_e:
+                        player_move = "shield"
+        
+        # game logic         
+        if player_move:
+            computer_move = computer.computer_choice()
+            if player_move.equals("shoot") and computer_move.equals("reload"):
+                wins += 1
+                game_state = False
+                game_over_state = True
+
+            player_can_make_move = False
+            
+        pygame.display.update()
