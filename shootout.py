@@ -435,11 +435,11 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                         print("Gesturing shoot")
                 
                 # Text to display hand value
-                font = cv2.FONT_HERSHEY_DUPLEX
+                cv_font = cv2.FONT_HERSHEY_DUPLEX
                 cv2.putText(image,  
                     str(top_gesture),  
                     (50, 50),
-                    font, 1,  
+                    cv_font, 1,  
                     (0, 255, 255),  
                     2,  
                     cv2.LINE_4) 
