@@ -65,11 +65,12 @@ clock = pygame.time.Clock()
 # ------------- STATES & VARIABLES-------------
 running = True
 tutorial_state = False
-menu_state = False
+menu_state = True
 tutorial_state = False
 game_state = False
-game_over_state = True
+game_over_state = False
 player_can_make_move = False
+recent_result = 0
 result_win = 1
 result_lose = 2
 result_tie = 3
@@ -201,8 +202,8 @@ wins_text = score_font.render("Wins: " + str(wins), True, (255, 255, 255))
 wins_text_outline = score_font.render("Wins: " + str(wins), True, (0, 0, 0))
 wins_x = 20
 wins_y = 20
-losses_text = score_font.render("Losses: " + str(wins), True, (255, 255, 255))
-losses_text_outline = score_font.render("Losses: " + str(wins), True, (0, 0, 0))
+losses_text = score_font.render("Losses: " + str(losses), True, (255, 255, 255))
+losses_text_outline = score_font.render("Losses: " + str(losses), True, (0, 0, 0))
 losses_x = 850
 losses_y = 20
 
@@ -260,8 +261,8 @@ def update_results():
     wins_text_outline = score_font.render("Wins: " + str(wins), True, (0, 0, 0))
     wins_x = 20
     wins_y = 20
-    losses_text = score_font.render("Losses: " + str(wins), True, (255, 255, 255))
-    losses_text_outline = score_font.render("Losses: " + str(wins), True, (0, 0, 0))
+    losses_text = score_font.render("Losses: " + str(losses), True, (255, 255, 255))
+    losses_text_outline = score_font.render("Losses: " + str(losses), True, (0, 0, 0))
     losses_x = 850
     losses_y = 20
 
@@ -313,12 +314,14 @@ def end_game_display(result):
     main_scene.blit(losses_text_outline, (losses_x + 2, losses_y + 2))
     main_scene.blit(losses_text, (losses_x, losses_y))
 
-    if result == 0:
+    if result == 1:
         x, y = winner_text, winner_text_outline
-    elif result == 1:
+    elif result == 3:
         x, y = draw_text, draw_text_outline
-    else:
+    elif result == 2:
         x, y = loser_text, loser_text_outline
+    else:
+        return
     
     main_scene.blit(y, (game_over_text_x - 2, game_over_text_y - 2))
     main_scene.blit(y, (game_over_text_x - 2, game_over_text_y))
@@ -374,8 +377,6 @@ def game_results(result):
     elif result == result_lose:
         losses += 1
     update_results()
-    end_game_display()
-    return result
 
 
 while running:
@@ -496,9 +497,7 @@ while running:
                     if event.key == pygame.K_q:
                         player_move = "shoot"
                     elif event.key == pygame.K_w:
-                    elif event.key == pygame.K_w:
                         player_move = "reload"
-                    elif event.key == pygame.K_e:
                     elif event.key == pygame.K_e:
                         player_move = "shield"
         
@@ -516,46 +515,53 @@ while running:
                 pygame.display.update()
                 pygame.time.delay(300)
 
-            if player_move == "shoot":
-                if computer_move == "shoot":
-                    result = game_results(result_tie)
+            if player_move == "shoot" and bullets > 0:
+                if computer_move == "shoot": 
+                    game_results(result_tie)
+                    recent_result = result_tie
                 elif computer_move == "shield":
-                    if bullets > 0:
-                        bullets -= 1
-                        update_stats(1)
-                    if choices["shield"]:
-                        choices["shield"] -= 1
-                    else: 
-                        result = game_results(result_win)
+                    bullets -= 1
+                    update_stats(1)
+                    choices["shield"] -= 1
                 else:
-                    if bullets > 0:
-                        result = game_results(result_win)
-            elif player_move == "shield":
+                    game_results(result_win)
+                    recent_result = result_win
+            elif player_move == "shoot" and bullets == 0:
                 if computer_move == "shoot":
-                    choices["shoot"] -= 1
-                    if shields:
-                        shields-= 1
-                        update_stats(0,1)
-                    else:
-                        result = game_results(result_lose)
+                    game_results(result_lose)
+                    recent_result = result_lose
                 elif computer_move == "shield":
                     choices["shield"] -= 1
-                    if shields:
-                        shields-= 1
-                        update_stats(0,1)
                 else:
-                    if shields:
-                        shields-= 1
-                        update_stats(0,1)
+                    if choices["shoot"] < 2:
+                        choices["shoot"] += 1
+            elif player_move == "shield" and shields > 0:
+                shields -= 1
+                update_stats(0,1)
+                if computer_move == "shoot":
+                    choices["shoot"] -= 1
+                elif computer_move == "shield":
+                    choices["shield"] -= 1
+                else:
+                    if choices["shoot"] < 2:
+                        choices["shoot"] += 1
+            elif player_move == "shield" and shields == 0:
+                if computer_move == "shoot":
+                    game_results(result_lose)
+                    recent_result = result_lose
+                elif computer_move == "shield":
+                    choices["shield"] -= 1
+                else:
                     if choices["shoot"] < 2:
                         choices["shoot"] += 1
             else:
                 if computer_move == "shoot":
-                    result = game_results(result_lose)
+                    game_results(result_lose)
+                    recent_result = result_lose
                 elif computer_move == "shield":
                     choices["shield"] -= 1
-                    if bullets > 0:
-                        bullets -= 1
+                    if bullets < 2:
+                        bullets += 1
                         update_stats(1)
                 else:
                     if bullets < 2:
@@ -567,5 +573,5 @@ while running:
             current_countdown_int = 4
             
     if game_over_state:
-        end_game_display(result)
+        end_game_display(recent_result)
         
