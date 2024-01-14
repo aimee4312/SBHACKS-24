@@ -100,11 +100,13 @@ outcome_lines = [
     "1. If both players choose to reload,",
     "   nothing happens; both players reload",
     "   2. If one player chooses to reload and the other chooses",
-    "   to shoot, the shot player loses a shield",
+    "   to shoot, the shot player loses",
     "3. If one player chooses to shield and the other ",
     "   chooses to shoot, the shooting player's shot is blocked",
     "4. If both players choose to shield,",
-    "   nothing happens; both players are protected"
+    "   nothing happens; both players are protected",
+    "5. If both players choose to shoot,",
+    "   both players lose"
 ]
 
 shoot_text_percentage_x = 0.2
@@ -185,25 +187,6 @@ losses_y = 20
 
 choices = {"shield": 2, "shoot": 0}
 
-def start_tutorial():
-    shoot_anim = tutorial.tutorial_animations(tutorial_shoot)
-    shield_anim = tutorial.tutorial_animations(tutorial_shield)
-    reload_anim = tutorial.tutorial_animations(tutorial_reload)
-    shoot_anim.start()
-    shield_anim.start()
-    reload_anim.start()
-    return shoot_anim, shield_anim, reload_anim
-
-def update_tutorial(shoot_anim, shield_anim, reload_anim):
-    shoot_anim.update(clock.tick(60) / 1000.0)
-    shield_anim.update(clock.tick(60) / 1000.0)
-    reload_anim.update(clock.tick(60) / 1000.0)
-
-    main_scene.blit(shoot_anim.current_frame, (shoot_anim_x, shoot_anim_y))
-    main_scene.blit(shield_anim.current_frame, (shield_anim_x, shield_anim_y))
-    main_scene.blit(reload_anim.current_frame, (reload_anim_x, reload_anim_y))
-    pygame.display.update()
-
 def end_game_display():
     main_scene.blit(wins_text_outline, (wins_x - 2, wins_y - 2))
     main_scene.blit(wins_text_outline, (wins_x - 2, wins_y))
@@ -248,16 +231,6 @@ def menu_display():
     main_scene.blit(start_text, (start_text_x, start_text_y))
     pygame.display.update()
 
-def update_idle(idle_anim):
-    idle_anim.update(clock.tick(60) / 1000.0)
-    main_scene.blit(idle_anim.current_frame, (idle_anim_x, idle_anim_y))
-    pygame.display.update()
-
-def start_game_display():
-    idle_anim = tutorial.tutorial_animations(idle)
-    idle_anim.start(3)
-    return idle_anim
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -265,8 +238,8 @@ while running:
                 tutorial_state = True
                 menu_state = False
                 main_scene.fill((0, 0, 0))
-                pygame.display.update()
-                shoot_anim, shield_anim, reload_anim = start_tutorial()
+                pygame.display.update(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
+                shoot_anim, shield_anim, reload_anim = tutorial.start_tutorial(tutorial_shoot, tutorial_shield, tutorial_reload)
         if event.type == pygame.QUIT:
                 running = False
 
@@ -279,11 +252,11 @@ while running:
                     menu_state = False
                     main_scene.fill((0, 0, 0))
                     pygame.display.update()
-                    shoot_anim, shield_anim, reload_anim = start_tutorial()
+                    shoot_anim, shield_anim, reload_anim = tutorial.start_tutorial(tutorial_shoot, tutorial_shield, tutorial_reload)
                 if event.key == pygame.K_t:
                     game_state = True
                     menu_state = False
-                    idle_anim = start_game_display()
+                    idle_anim = computer.start_idle_display(idle)
                     main_scene.blit(background, (0, 0))
             if event.type == pygame.QUIT:
                 running = False
@@ -331,7 +304,7 @@ while running:
         win_rect = win_text.get_rect(center=(instruction_text_x * 1.25, instruction_text_y * 1.3))
         main_scene.blit(win_text, win_rect)
         
-        update_tutorial(shoot_anim, shield_anim, reload_anim)
+        tutorial.update_tutorial(shoot_anim, shield_anim, reload_anim, clock, main_scene, shoot_anim_x, shoot_anim_y, shield_anim_x, shield_anim_y, reload_anim_x, reload_anim_y)
         main_scene.fill((0, 0, 0))
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -343,13 +316,13 @@ while running:
                 if event.key == pygame.K_t:
                     game_state = True
                     tutorial_state = False
-                    idle_anim = start_game_display()
+                    idle_anim = computer.start_idle_display(idle)
                     main_scene.blit(background, (0, 0))
             if event.type == pygame.QUIT:
                 running = False
 
     if game_state:
-        update_idle(idle_anim)
+        computer.update_idle(idle_anim, clock, main_scene, idle_anim_x, idle_anim_y)
         main_scene.blit(background, (0, 0))
         if event.type == pygame.QUIT:
             running = False
