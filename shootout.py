@@ -217,17 +217,17 @@ wins_x = 20
 wins_y = 20
 losses_text = score_font.render("Losses: " + str(losses), True, (255, 255, 255))
 losses_text_outline = score_font.render("Losses: " + str(losses), True, (0, 0, 0))
-losses_x = 850
+losses_x = 20
 losses_y = 20
 
-bullets_text = score_font.render("Bullets: " + str(bullets), True, (255, 255, 255))
-bullets_text_outline = score_font.render("Bullets: " + str(bullets), True, (0, 0, 0))
-bullets_x = 20
-bullets_y = 20
-shields_text = score_font.render("Shields: " + str(shields), True, (255, 255, 255))
-shields_text_outline = score_font.render("Shields: " + str(shields), True, (0, 0, 0))
-shields_x = 850
-shields_y = 20
+# bullets_text = score_font.render("Bullets: " + str(bullets), True, (255, 255, 255))
+# bullets_text_outline = score_font.render("Bullets: " + str(bullets), True, (0, 0, 0))
+# bullets_x = 20
+# bullets_y = 20
+# shields_text = score_font.render("Shields: " + str(shields), True, (255, 255, 255))
+# shields_text_outline = score_font.render("Shields: " + str(shields), True, (0, 0, 0))
+# shields_x = 850
+# shields_y = 20
 
 # COUNTDOWN
 countdown_time = 1000
@@ -248,23 +248,27 @@ draw_text = game_over_font.render("It's a Draw", True, (222, 169, 169))
 draw_text_outline = game_over_font.render("It's a Draw", True, (0, 0, 0))
 loser_text = game_over_font.render("You Lose!", True, (222, 169, 169))
 loser_text_outline = game_over_font.render("You Lose!", True, (0, 0, 0))
-game_over_text_percentage_x = 0.2
-game_over_text_percentage_y = 0.3 
+game_over_text_percentage_x = 0.39
+game_over_text_percentage_y = 0.65
 game_over_text_x = int(display_width * game_over_text_percentage_x)
 game_over_text_y = int(display_height * game_over_text_percentage_y)
 
-# END SCREEN
-game_over_font = pygame.font.Font('freesansbold.ttf', 84)
-winner_text = game_over_font.render("You Win!", True, (222, 169, 169))
-winner_text_outline = game_over_font.render("You Win!", True, (0, 0, 0))
-draw_text = game_over_font.render("It's a Draw", True, (222, 169, 169))
-draw_text_outline = game_over_font.render("It's a Draw", True, (0, 0, 0))
-loser_text = game_over_font.render("You Lose!", True, (222, 169, 169))
-loser_text_outline = game_over_font.render("You Lose!", True, (0, 0, 0))
-game_over_text_percentage_x = 0.2
-game_over_text_percentage_y = 0.3 
-game_over_text_x = int(display_width * game_over_text_percentage_x)
-game_over_text_y = int(display_height * game_over_text_percentage_y)
+
+quit_font = pygame.font.Font('freesansbold.ttf', 36)
+quit_text = quit_font.render("Point your thumb down to quit", True, (255, 255, 255))
+quit_text_outline = quit_font.render("Point your thumb down to quit", True, (0, 0, 0))
+quit_text_percentage_x = 0.34
+quit_text_percentage_y = 0.75
+quit_text_x = int(display_width * quit_text_percentage_x)
+quit_text_y = int(display_height * quit_text_percentage_y)
+
+replay_font = pygame.font.Font('freesansbold.ttf', 36)
+replay_text = replay_font.render("Shoot to replay the game", True, (222, 169, 169))
+replay_text_outline = replay_font.render("Shoot to replay the game", True, (0, 0, 0))
+replay_text_percentage_x = 0.37
+replay_text_percentage_y = 0.8 
+replay_text_x = int(display_width * replay_text_percentage_x)
+replay_text_y = int(display_height * replay_text_percentage_y)
 
 choices = {"shield": 2, "shoot": 0}
 
@@ -345,6 +349,22 @@ def end_game_display(result):
     main_scene.blit(losses_text_outline, (losses_x + 2, losses_y))
     main_scene.blit(losses_text_outline, (losses_x + 2, losses_y + 2))
     main_scene.blit(losses_text, (losses_x, losses_y))
+
+    main_scene.blit(replay_text_outline, (replay_text_x - 2, replay_text_y - 2))
+    main_scene.blit(replay_text_outline, (replay_text_x - 2, replay_text_y))
+    main_scene.blit(replay_text_outline, (replay_text_x, replay_text_y - 2))
+    main_scene.blit(replay_text_outline, (replay_text_x, replay_text_y + 2))
+    main_scene.blit(replay_text_outline, (replay_text_x + 2, replay_text_y))
+    main_scene.blit(replay_text_outline, (replay_text_x + 2, replay_text_y + 2))
+    main_scene.blit(replay_text, (replay_text_x, replay_text_y))
+
+    main_scene.blit(quit_text_outline, (quit_text_x - 2, quit_text_y - 2))
+    main_scene.blit(quit_text_outline, (quit_text_x - 2, quit_text_y))
+    main_scene.blit(quit_text_outline, (quit_text_x, quit_text_y - 2))
+    main_scene.blit(quit_text_outline, (quit_text_x, quit_text_y + 2))
+    main_scene.blit(quit_text_outline, (quit_text_x + 2, quit_text_y))
+    main_scene.blit(quit_text_outline, (quit_text_x + 2, quit_text_y + 2))
+    main_scene.blit(quit_text, (quit_text_x, quit_text_y))
 
     if result == 1:
         x, y = winner_text, winner_text_outline
@@ -544,6 +564,8 @@ while running:
                 if computer_move == "shoot": 
                     game_results(result_tie)
                     recent_result = result_tie
+                    game_over_state = True
+                    game_state = False
                 elif computer_move == "shield":
                     gunblock_SFX.play()
                     bullets -= 1
@@ -551,10 +573,14 @@ while running:
                 else:
                     game_results(result_win)
                     recent_result = result_win
+                    game_over_state = True
+                    game_state = False
             elif player_move == "shoot" and bullets == 0:
                 if computer_move == "shoot":
                     game_results(result_lose)
                     recent_result = result_lose
+                    game_over_state = True
+                    game_state = False
                 elif computer_move == "shield":
                     choices["shield"] -= 1
                 else:
@@ -573,6 +599,8 @@ while running:
                 if computer_move == "shoot":
                     game_results(result_lose)
                     recent_result = result_lose
+                    game_over_state = True
+                    game_state = False
                 elif computer_move == "shield":
                     shield_SFX.play()
                     choices["shield"] -= 1
@@ -584,6 +612,8 @@ while running:
                     death_SFX.play()
                     game_results(result_lose)
                     recent_result = result_lose
+                    game_over_state = True
+                    game_state = False
                 elif computer_move == "shield":
                     reload_SFX.play()
                     shield_SFX.play()
@@ -601,4 +631,12 @@ while running:
             
     if game_over_state:
         end_game_display(recent_result)
-        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    bullets = 0
+                    shields = 2
+                    game_state = True
+                    game_over_state = False
