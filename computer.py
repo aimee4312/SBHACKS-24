@@ -2,20 +2,16 @@ import random
 import tutorial
 import pygame
 
-def computer_choice(choices):
+def computer_choice(choices, bullets, shields):
     possible_choices = ["reload"]
-    if choices["shield"]:
+    if choices["shield"] and bullets > 0:
         possible_choices.append("shield")
     if choices["shoot"]:
+        if bullets == 0 and shields == 0:
+            return "shoot"
         possible_choices.append("shoot")
     
     selected_choice = random.choice(possible_choices)
-    """ if selected_choice != "reload":
-        choices[selected_choice] -= 1
-        
-    else:
-        if choices["shoot"] < 2:
-            choices["shoot"] += 1 """
     
     return selected_choice
 
