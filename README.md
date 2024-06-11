@@ -23,6 +23,6 @@ You will be able to use hand movements such as finger guns, thumbs down, open pa
 - [Tensorflow](https://www.tensorflow.org/)
 
 ## Demo
-[Demo](https://youtu.be/d5l8V0BbhQk)
+[![Demo](https://img.youtube.com/vi/d5l8V0BbhQk/0.jpg)](https://www.youtube.com/watch?v=d5l8V0BbhQk)
 
 
